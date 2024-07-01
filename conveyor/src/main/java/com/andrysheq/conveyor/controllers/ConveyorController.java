@@ -15,6 +15,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -29,19 +30,18 @@ import java.util.List;
 import static com.andrysheq.conveyor.enums.MaritalStatus.DIVORCED;
 import static com.andrysheq.conveyor.enums.MaritalStatus.MARRIED;
 
-@Log4j2
-@RequiredArgsConstructor
 @RestController
-@RequestMapping()
+@RequiredArgsConstructor(onConstructor_ = @__(@Autowired))
+@RequestMapping("/conveyor")
 @Tag(
         name = "Контроллер для работы с авторами",
         description = "Все методы для работы с авторами"
 )
 public class ConveyorController {
 
-    private ScoringService scoringService;
-    private static final String OFFERS_URL = "/conveyor/offers";
-    private static final String CALCULATION_URL = "/conveyor/calculation";
+    private final ScoringService scoringService;
+    private static final String OFFERS_URL = "/offers";
+    private static final String CALCULATION_URL = "/calculation";
 
     @Operation(
             summary = "Расчёт возможных условий кредита"

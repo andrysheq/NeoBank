@@ -1,10 +1,7 @@
 package com.andrysheq.conveyor.advice;
 
 import com.andrysheq.conveyor.dto.error.ErrorResponse;
-import com.andrysheq.conveyor.exception.ApplicationException;
-import com.andrysheq.conveyor.exception.IllegalParameterException;
-import com.andrysheq.conveyor.exception.RecordNotFoundException;
-import com.andrysheq.conveyor.exception.UnknownParameterException;
+import com.andrysheq.conveyor.exception.*;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -50,6 +47,11 @@ public class ResponseEntityExceptionAdvice extends ResponseEntityExceptionHandle
     @ExceptionHandler(RecordNotFoundException.class)
     public final ResponseEntity<Object> handleRecordNotFoundException(RecordNotFoundException ex, WebRequest request) {
         return buildErrorResponse(null, "Запись не найдена", createDetails(ex), HttpStatus.NOT_FOUND, ex);
+    }
+
+    @ExceptionHandler(ScoringException.class)
+    public final ResponseEntity<Object> handleScoringException(ScoringException ex, WebRequest request) {
+        return buildErrorResponse(null, "Скоринговая система выдала отказ", createDetails(ex), HttpStatus.NOT_FOUND, ex);
     }
 
     @ExceptionHandler(UnknownParameterException.class)

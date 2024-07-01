@@ -16,11 +16,11 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ScoringDataDTO {
-    @Schema(description = "")
+    @Schema(description = "Сумма")
     @NotNull
     private BigDecimal amount;
 
-    @Schema(description = "")
+    @Schema(description = "Срок")
     @NotNull
     private Integer term;
 
@@ -76,7 +76,7 @@ public class ScoringDataDTO {
     @NotNull
     private String account;
 
-    @Schema(description = "")
+    @Schema(description = "Страховка")
     @NotNull
     private Boolean isInsuranceEnabled;
 
