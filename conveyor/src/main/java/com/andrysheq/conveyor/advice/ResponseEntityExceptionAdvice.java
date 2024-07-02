@@ -64,20 +64,12 @@ public class ResponseEntityExceptionAdvice extends ResponseEntityExceptionHandle
         return buildErrorResponse(null, "Недопустимый параметр запроса", createDetails(ex), HttpStatus.BAD_REQUEST, ex);
     }
 
-//    @ExceptionHandler(UserNotAuthenticatedException.class)
-//    public final ResponseEntity<Object> handleUserNotAuthenticatedException(UserNotAuthenticatedException ex, WebRequest request) {
-//        return buildErrorResponse(null, "Пользователь не выполнил вход в систему", createDetails(ex), HttpStatus.UNAUTHORIZED, ex);
-//    }
-//
-//    @ExceptionHandler(InvalidTokenException.class)
-//    public final ResponseEntity<Object> handleInvalidTokenException(InvalidTokenException ex, WebRequest request) {
-//        return buildErrorResponse(null, "Токен пользователя имеет неверный формат", createDetails(ex), HttpStatus.UNAUTHORIZED, ex);
-//    }
-//
-//    @ExceptionHandler(ValidationTokenException.class)
-//    public final ResponseEntity<Object> handleValidationTokenException(ValidationTokenException ex, WebRequest request) {
-//        return buildErrorResponse(null, "Токен пользователя не прошел валидацию", createDetails(ex), HttpStatus.FORBIDDEN, ex);
-//    }
+    @ExceptionHandler(LoanDeniedException.class)
+    public ResponseEntity<ErrorResponse> handleLoanDeniedException(LoanDeniedException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(null, "Отказано в кредите", List.of(ex.getMessage()));
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,

@@ -14,11 +14,11 @@ public class LoanOfferDTO {
     @NotNull
     private BigDecimal totalAmount;
 
-    @Schema(description = "Запрашиваемое количество")
+    @Schema(description = "Запрашиваемая сумма")
     @NotNull
     private BigDecimal requestedAmount;
 
-    @Schema(description = "Срок")
+    @Schema(description = "Срок кредитования")
     @NotNull
     private Integer term;
 
@@ -30,11 +30,11 @@ public class LoanOfferDTO {
     @NotNull
     private BigDecimal rate;
 
-    @Schema(description = "Страховка")
+    @Schema(description = "Наличие страхования")
     @NotNull
     private Boolean isInsuranceEnabled;
 
-    @Schema(description = "Маркер трудоустроенного клиента")
+    @Schema(description = "Наличие заработной платы у клиента")
     @NotNull
     private Boolean isSalaryClient;
 }

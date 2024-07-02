@@ -14,27 +14,27 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PaymentScheduleElement {
-    @Schema(description = "")
+    @Schema(description = "Номер платежа")
     @NotNull
     private Integer number;
 
-    @Schema(description = "")
+    @Schema(description = "Дата платежа")
     @NotNull
     private LocalDate date;
 
-    @Schema(description = "")
+    @Schema(description = "Общая сумма платежа")
     @NotNull
     private BigDecimal totalPayment;
 
-    @Schema(description = "")
+    @Schema(description = "Сумма выплаты процентов")
     @NotNull
     private BigDecimal interestPayment;
 
-    @Schema(description = "")
+    @Schema(description = "Сумма выплаты долга")
     @NotNull
     private BigDecimal debtPayment;
 
-    @Schema(description = "")
+    @Schema(description = "Оставшаяся сумма долга")
     @NotNull
     private BigDecimal remainingDebt;
 }

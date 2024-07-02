@@ -56,7 +56,7 @@ public class ScoringDataDTO {
     @NotNull
     private LocalDate passportIssueDate;
 
-    @Schema(description = "")
+    @Schema(description = "Отделение выдачи паспорта")
     @NotNull
     private String passportIssueBranch;
 
@@ -64,23 +64,23 @@ public class ScoringDataDTO {
     @NotNull
     private MaritalStatus maritalStatus;
 
-    @Schema(description = "")
+    @Schema(description = "Количество иждивенцов")
     @NotNull
     private Integer dependentAmount;
 
-    @Schema(description = "")
+    @Schema(description = "Информация о трудоустройстве клиента")
     @NotNull
     private EmploymentDTO employment;
 
-    @Schema(description = "")
+    @Schema(description = "Идентификатор аккаунта")
     @NotNull
     private String account;
 
-    @Schema(description = "Страховка")
+    @Schema(description = "Наличие страховки кредита")
     @NotNull
     private Boolean isInsuranceEnabled;
 
-    @Schema(description = "Маркер трудоустроенного клиента")
+    @Schema(description = "Наличие зарплаты")
     @NotNull
     private Boolean isSalaryClient;
 }
