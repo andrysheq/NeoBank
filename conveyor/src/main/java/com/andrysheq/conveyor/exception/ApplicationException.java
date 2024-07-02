@@ -8,9 +8,6 @@ import java.io.Serial;
 @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 public class ApplicationException extends RuntimeException {
 
-    @Serial
-    private static final long serialVersionUID = -7594567264275316144L;
-
     public ApplicationException(String exception) {
         super(exception);
     }

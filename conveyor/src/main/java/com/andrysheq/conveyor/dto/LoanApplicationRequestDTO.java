@@ -8,10 +8,10 @@ import java.time.LocalDate;
 
 @Schema(description = "Запрос для получения кредита")
 public class LoanApplicationRequestDTO {
-    @Schema(description = "Количество")
+    @Schema(description = "Сумма кредита")
     @NotNull
     private BigDecimal amount;
-    @Schema(description = "")
+    @Schema(description = "Срок кредитования")
     @NotNull
     private Integer term;
     @Schema(description = "Имя клиента")

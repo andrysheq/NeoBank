@@ -1,10 +1,7 @@
 package com.andrysheq.conveyor.advice;
 
 import com.andrysheq.conveyor.dto.error.ErrorResponse;
-import com.andrysheq.conveyor.exception.ApplicationException;
-import com.andrysheq.conveyor.exception.IllegalParameterException;
-import com.andrysheq.conveyor.exception.RecordNotFoundException;
-import com.andrysheq.conveyor.exception.UnknownParameterException;
+import com.andrysheq.conveyor.exception.*;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -52,6 +49,11 @@ public class ResponseEntityExceptionAdvice extends ResponseEntityExceptionHandle
         return buildErrorResponse(null, "Запись не найдена", createDetails(ex), HttpStatus.NOT_FOUND, ex);
     }
 
+    @ExceptionHandler(ScoringException.class)
+    public final ResponseEntity<Object> handleScoringException(ScoringException ex, WebRequest request) {
+        return buildErrorResponse(null, "Скоринговая система выдала отказ", createDetails(ex), HttpStatus.NOT_FOUND, ex);
+    }
+
     @ExceptionHandler(UnknownParameterException.class)
     public final ResponseEntity<Object> handleUnknownParameterException(UnknownParameterException ex, WebRequest request) {
         return buildErrorResponse(null, "Неизвестный параметр запроса", createDetails(ex), HttpStatus.BAD_REQUEST, ex);
@@ -62,20 +64,12 @@ public class ResponseEntityExceptionAdvice extends ResponseEntityExceptionHandle
         return buildErrorResponse(null, "Недопустимый параметр запроса", createDetails(ex), HttpStatus.BAD_REQUEST, ex);
     }
 
-//    @ExceptionHandler(UserNotAuthenticatedException.class)
-//    public final ResponseEntity<Object> handleUserNotAuthenticatedException(UserNotAuthenticatedException ex, WebRequest request) {
-//        return buildErrorResponse(null, "Пользователь не выполнил вход в систему", createDetails(ex), HttpStatus.UNAUTHORIZED, ex);
-//    }
-//
-//    @ExceptionHandler(InvalidTokenException.class)
-//    public final ResponseEntity<Object> handleInvalidTokenException(InvalidTokenException ex, WebRequest request) {
-//        return buildErrorResponse(null, "Токен пользователя имеет неверный формат", createDetails(ex), HttpStatus.UNAUTHORIZED, ex);
-//    }
-//
-//    @ExceptionHandler(ValidationTokenException.class)
-//    public final ResponseEntity<Object> handleValidationTokenException(ValidationTokenException ex, WebRequest request) {
-//        return buildErrorResponse(null, "Токен пользователя не прошел валидацию", createDetails(ex), HttpStatus.FORBIDDEN, ex);
-//    }
+    @ExceptionHandler(LoanDeniedException.class)
+    public ResponseEntity<ErrorResponse> handleLoanDeniedException(LoanDeniedException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(null, "Отказано в кредите", List.of(ex.getMessage()));
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+    }
+
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,

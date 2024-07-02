@@ -14,35 +14,35 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CreditDTO {
-    @Schema(description = "")
+    @Schema(description = "Сумма")
     @NotNull
     private BigDecimal amount;
 
-    @Schema(description = "")
+    @Schema(description = "Срок")
     @NotNull
     private Integer term;
 
-    @Schema(description = "")
+    @Schema(description = "Ежемесячный платеж")
     @NotNull
     private BigDecimal monthlyPayment;
 
-    @Schema(description = "")
+    @Schema(description = "Ставка")
     @NotNull
     private BigDecimal rate;
 
-    @Schema(description = "")
+    @Schema(description = "ПСК")
     @NotNull
     private BigDecimal psk;
 
-    @Schema(description = "")
+    @Schema(description = "Наличие страховки кредита")
     @NotNull
     private Boolean isInsuranceEnabled;
 
-    @Schema(description = "Маркер трудоустроенного клиента")
+    @Schema(description = "Наличие заработной платы у клиента")
     @NotNull
     private Boolean isSalaryClient;
 
-    @Schema(description = "")
+    @Schema(description = "Расписание платежей")
     @NotNull
     private List<PaymentScheduleElement> paymentSchedule;
 }
