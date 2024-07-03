@@ -1,10 +1,11 @@
 package com.andrysheq.conveyor.controllers;
 
-import com.andrysheq.conveyor.dto.*;
+import com.andrysheq.conveyor.dto.CreditDTO;
+import com.andrysheq.conveyor.dto.LoanApplicationRequestDTO;
+import com.andrysheq.conveyor.dto.LoanOfferDTO;
+import com.andrysheq.conveyor.dto.ScoringDataDTO;
 import com.andrysheq.conveyor.dto.error.ErrorResponse;
-import com.andrysheq.conveyor.enums.EmploymentStatus;
 import com.andrysheq.conveyor.service.ScoringService;
-import com.andrysheq.conveyor.utils.RestUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -14,21 +15,14 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.Period;
-import java.util.ArrayList;
 import java.util.List;
-
-import static com.andrysheq.conveyor.enums.MaritalStatus.DIVORCED;
-import static com.andrysheq.conveyor.enums.MaritalStatus.MARRIED;
 
 @RestController
 @RequiredArgsConstructor(onConstructor_ = @__(@Autowired))

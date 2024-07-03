@@ -2,10 +2,16 @@ package com.andrysheq.conveyor.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-
+@Getter
+@Setter
+@EqualsAndHashCode
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Schema(description = "Запрос для получения кредита")
 public class LoanApplicationRequestDTO {
     @Schema(description = "Сумма кредита")
