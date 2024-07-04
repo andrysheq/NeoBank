@@ -2,12 +2,17 @@ package com.andrysheq.conveyor.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
+import lombok.*;
 
 import java.math.BigDecimal;
-
+@Getter
+@Setter
+@EqualsAndHashCode
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class LoanOfferDTO {
     @Schema(description = "Идентификатор сеанса")
-    @NotNull
     private Long applicationId;
 
     @Schema(description = "Общая сумма")

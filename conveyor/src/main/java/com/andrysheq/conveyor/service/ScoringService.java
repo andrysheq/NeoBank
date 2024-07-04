@@ -1,8 +1,6 @@
 package com.andrysheq.conveyor.service;
 
-import com.andrysheq.conveyor.dto.CreditDTO;
-import com.andrysheq.conveyor.dto.PaymentScheduleElement;
-import com.andrysheq.conveyor.dto.ScoringDataDTO;
+import com.andrysheq.conveyor.dto.*;
 import com.andrysheq.conveyor.enums.EmploymentStatus;
 import com.andrysheq.conveyor.exception.AgeNotAllowedException;
 import com.andrysheq.conveyor.exception.ExcessiveLoanAmountException;
@@ -24,4 +22,5 @@ public interface ScoringService {
     public List<PaymentScheduleElement> generatePaymentSchedule(BigDecimal loanAmount, int termInMonths, BigDecimal annualInterestRate, BigDecimal annuityPayment);
     public BigDecimal calculateRate(ScoringDataDTO request);
     public void checkLoanEligibility(ScoringDataDTO request);
+    List<LoanOfferDTO> getLoanOffers(LoanApplicationRequestDTO request, Long applicationId);
 }

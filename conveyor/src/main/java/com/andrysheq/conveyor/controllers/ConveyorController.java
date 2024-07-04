@@ -17,10 +17,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -88,9 +85,10 @@ public class ConveyorController {
             consumes = MediaType.APPLICATION_JSON_VALUE
     )
     public List<LoanOfferDTO> preScoring(
-            @Parameter(name = "ScoringDataDTO", required = true) @Valid @RequestBody LoanApplicationRequestDTO request) {
+            @Parameter(description = "Loan Application Request DTO", required = true) @Valid @RequestBody LoanApplicationRequestDTO request,
+            @Parameter(description = "Application ID", required = true) @RequestParam Long applicationId){
 
-        return null;
+        return scoringService.getLoanOffers(request, applicationId);
     }
 
     @Operation(

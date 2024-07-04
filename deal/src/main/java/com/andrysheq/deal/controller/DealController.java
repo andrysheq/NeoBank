@@ -6,7 +6,9 @@ import com.andrysheq.conveyor.dto.LoanOfferDTO;
 import com.andrysheq.conveyor.dto.ScoringDataDTO;
 import com.andrysheq.conveyor.dto.error.ErrorResponse;
 import com.andrysheq.conveyor.service.ScoringService;
+import com.andrysheq.deal.entity.Application;
 import com.andrysheq.deal.entity.Client;
+import com.andrysheq.deal.repo.service.ApplicationRepoService;
 import com.andrysheq.deal.repo.service.ClientRepoService;
 import com.andrysheq.deal.service.ClientService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -37,6 +39,7 @@ import java.util.List;
 public class DealController {
 
     private final ClientService clientService;
+    private final ApplicationRepoService applicationRepoService;
     private final ClientRepoService clientRepoService;
     private static final String APPLICATION_URL = "/application";
     private static final String OFFER_URL = "/offer";
@@ -97,6 +100,10 @@ public class DealController {
 
         Client client = clientService.getClient(request);
         clientRepoService.save(client);
+
+        Application application = new Application(client);
+        applicationRepoService.save(application);
+
         return null;
     }
 }

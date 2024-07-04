@@ -2,8 +2,7 @@ package com.andrysheq.deal.entity;
 
 import com.andrysheq.conveyor.enums.Status;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -12,6 +11,8 @@ import java.util.List;
 @Table(name = "application")
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Application {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -40,5 +41,14 @@ public class Application {
     @CollectionTable(name = "status_history", joinColumns = @JoinColumn(name = "application_id"))
     @Column(name = "status")
     private List<Status> statusHistory;
+
+    public Application(Client client) {
+        this.client = client;
+    }
+
+    @PrePersist
+    protected void onCreate() {
+        creationDate = LocalDateTime.now();
+    }
 }
 

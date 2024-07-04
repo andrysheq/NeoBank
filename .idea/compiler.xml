@@ -13,8 +13,6 @@
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="application" target="17" />
-      <module name="conveyor" target="17" />
-      <module name="deal" target="17" />
       <module name="NeoBank" target="1.5" />
     </bytecodeTargetLevel>
   </component>
