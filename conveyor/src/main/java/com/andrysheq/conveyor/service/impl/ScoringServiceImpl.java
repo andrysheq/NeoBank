@@ -1,8 +1,6 @@
 package com.andrysheq.conveyor.service.impl;
 
-import com.andrysheq.conveyor.dto.CreditDTO;
-import com.andrysheq.conveyor.dto.PaymentScheduleElement;
-import com.andrysheq.conveyor.dto.ScoringDataDTO;
+import com.andrysheq.conveyor.dto.*;
 import com.andrysheq.conveyor.enums.EmploymentStatus;
 import com.andrysheq.conveyor.exception.AgeNotAllowedException;
 import com.andrysheq.conveyor.exception.ExcessiveLoanAmountException;
@@ -21,6 +19,7 @@ import java.time.LocalDate;
 import java.time.Period;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -30,12 +29,6 @@ public class ScoringServiceImpl implements ScoringService {
 
     @Value("${default-rate}")
     private BigDecimal defaultRate;
-
-    @Value("${base-period-per-year}")
-    private Integer basePeriodPerYear;
-
-    @Value("${base-period}")
-    private Integer basePeriod;
     public CreditDTO scoring(ScoringDataDTO request){
         checkLoanEligibility(request);
         CreditDTO result = new CreditDTO();
@@ -61,20 +54,16 @@ public class ScoringServiceImpl implements ScoringService {
     }
 
     public BigDecimal calculateMonthlyPayment(BigDecimal loanAmount, BigDecimal annualInterestRate, int termInMonths) {
-        // Преобразуем годовую процентную ставку в месячную (учитывая, что ставка дана в процентах)
         BigDecimal monthlyInterestRate = annualInterestRate.divide(BigDecimal.valueOf(12), 10, RoundingMode.HALF_UP).divide(BigDecimal.valueOf(100), 10, RoundingMode.HALF_UP);
 
-        // (1 + r)^n
         BigDecimal onePlusRateToTerm = BigDecimal.ONE.add(monthlyInterestRate).pow(termInMonths);
 
-        // P * (r * (1 + r)^n) / ((1 + r)^n - 1)
         BigDecimal numerator = loanAmount.multiply(monthlyInterestRate).multiply(onePlusRateToTerm);
         BigDecimal denominator = onePlusRateToTerm.subtract(BigDecimal.ONE);
 
-        // Аннуитетный платеж
         BigDecimal annuityPayment = numerator.divide(denominator, 10, RoundingMode.HALF_UP);
 
-        return annuityPayment.setScale(2, RoundingMode.HALF_UP); // Возвращаем округленный ежемесячный платеж
+        return annuityPayment.setScale(2, RoundingMode.HALF_UP);
     }
 
     public BigDecimal getPsk(List<PaymentScheduleElement> schedule, BigDecimal loanAmount, BigDecimal annualInterestRate) {
@@ -99,7 +88,6 @@ public class ScoringServiceImpl implements ScoringService {
                 npv = npv.add(payment.getTotalPayment().divide(denominator, 10, RoundingMode.HALF_UP));
             }
 
-            // Учитываем сумму кредита как начальный денежный поток (отрицательный)
             npv = npv.subtract(loanAmount);
 
             if (npv.compareTo(BigDecimal.ZERO) > 0) {
@@ -119,10 +107,8 @@ public class ScoringServiceImpl implements ScoringService {
     public List<PaymentScheduleElement> generatePaymentSchedule(BigDecimal loanAmount, int termInMonths, BigDecimal annualInterestRate, BigDecimal annuityPayment) {
         List<PaymentScheduleElement> paymentSchedule = new ArrayList<>();
 
-        // Преобразуем годовую процентную ставку в месячную (учитывая, что ставка дана в процентах)
         BigDecimal monthlyInterestRate = annualInterestRate.divide(BigDecimal.valueOf(12), 10, RoundingMode.HALF_UP).divide(BigDecimal.valueOf(100), 10, RoundingMode.HALF_UP);
 
-        // (1 + r)^n
         BigDecimal onePlusRateToTerm = BigDecimal.ONE.add(monthlyInterestRate).pow(termInMonths);
 
         BigDecimal remainingDebt = loanAmount;
@@ -217,5 +203,51 @@ public class ScoringServiceImpl implements ScoringService {
         if (request.getEmployment().getWorkExperienceTotal() < 12 || request.getEmployment().getWorkExperienceCurrent() < 3) {
             throw new InsufficientWorkExperienceException();
         }
+    }
+
+    public List<LoanOfferDTO> getLoanOffers(LoanApplicationRequestDTO request, Long applicationId){
+        List<LoanOfferDTO> result = new ArrayList<>();
+
+        BigDecimal amount = request.getAmount();
+        Integer term = request.getTerm();
+
+        LoanOfferDTO notInsuranceNotSalary = getLoanOffer(applicationId, amount, term, false,false);
+        LoanOfferDTO notInsuranceIsSalary = getLoanOffer(applicationId, amount, term, false,true);
+        LoanOfferDTO isInsuranceNotSalary = getLoanOffer(applicationId, amount, term, true,false);
+        LoanOfferDTO isInsuranceIsSalary = getLoanOffer(applicationId, amount, term, true,true);
+
+        Collections.addAll(result, notInsuranceIsSalary, notInsuranceNotSalary, isInsuranceIsSalary, isInsuranceNotSalary);
+        return result;
+    }
+
+    public LoanOfferDTO getLoanOffer(Long applicationId, BigDecimal amount, Integer term, Boolean isInsuranceEnabled, Boolean isSalaryClient){
+        LoanOfferDTO result = new LoanOfferDTO();
+
+        result.setApplicationId(applicationId);
+        result.setIsInsuranceEnabled(isInsuranceEnabled);
+        result.setIsSalaryClient(isSalaryClient);
+        result.setRequestedAmount(amount);
+        result.setTerm(term);
+
+        BigDecimal rate = defaultRate;
+        BigDecimal totalAmount;
+
+        if (isInsuranceEnabled) {
+            rate = rate.subtract(new BigDecimal(3));
+            totalAmount = amount.add(new BigDecimal(100000));
+        } else {
+            totalAmount = amount;
+        }
+
+        if(isSalaryClient){
+            rate = rate.subtract(new BigDecimal(1));
+        }
+
+        BigDecimal monthlyPayment = calculateMonthlyPayment(totalAmount, rate, term);
+
+        result.setRate(rate);
+        result.setTotalAmount(totalAmount);
+        result.setMonthlyPayment(monthlyPayment);
+        return result;
     }
 }

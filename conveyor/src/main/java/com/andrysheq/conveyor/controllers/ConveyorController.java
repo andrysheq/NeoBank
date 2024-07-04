@@ -1,10 +1,11 @@
 package com.andrysheq.conveyor.controllers;
 
-import com.andrysheq.conveyor.dto.*;
+import com.andrysheq.conveyor.dto.CreditDTO;
+import com.andrysheq.conveyor.dto.LoanApplicationRequestDTO;
+import com.andrysheq.conveyor.dto.LoanOfferDTO;
+import com.andrysheq.conveyor.dto.ScoringDataDTO;
 import com.andrysheq.conveyor.dto.error.ErrorResponse;
-import com.andrysheq.conveyor.enums.EmploymentStatus;
 import com.andrysheq.conveyor.service.ScoringService;
-import com.andrysheq.conveyor.utils.RestUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -14,21 +15,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.time.Period;
-import java.util.ArrayList;
 import java.util.List;
-
-import static com.andrysheq.conveyor.enums.MaritalStatus.DIVORCED;
-import static com.andrysheq.conveyor.enums.MaritalStatus.MARRIED;
 
 @RestController
 @RequiredArgsConstructor(onConstructor_ = @__(@Autowired))
@@ -94,9 +85,10 @@ public class ConveyorController {
             consumes = MediaType.APPLICATION_JSON_VALUE
     )
     public List<LoanOfferDTO> preScoring(
-            @Parameter(name = "ScoringDataDTO", required = true) @Valid @RequestBody LoanApplicationRequestDTO request) {
+            @Parameter(description = "Loan Application Request DTO", required = true) @Valid @RequestBody LoanApplicationRequestDTO request,
+            @Parameter(description = "Application ID", required = true) @RequestParam Long applicationId){
 
-        return null;
+        return scoringService.getLoanOffers(request, applicationId);
     }
 
     @Operation(
