@@ -1,6 +1,7 @@
 package com.andrysheq.conveyor.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.Embeddable;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
@@ -9,6 +10,7 @@ import java.math.BigDecimal;
 @Setter
 @EqualsAndHashCode
 @Builder
+@Embeddable
 @NoArgsConstructor
 @AllArgsConstructor
 public class LoanOfferDTO {
