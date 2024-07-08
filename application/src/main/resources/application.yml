@@ -1,0 +1,8 @@
+server:
+  port:
+    8003
+spring:
+  application:
+    name: application
+  autoconfigure:
+    exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
