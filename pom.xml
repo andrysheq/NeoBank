@@ -26,6 +26,7 @@
         <module>conveyor</module>
         <module>application</module>
         <module>gateway</module>
+        <module>dossier</module>
     </modules>
     <dependencies>
         <dependency>

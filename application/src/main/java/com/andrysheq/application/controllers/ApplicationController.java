@@ -34,7 +34,7 @@ public class ApplicationController {
     private final ApplicationFeignClient applicationFeignClient;
 
     private static final String APPLICATION_URL = "/application";
-    private static final String OFFER_URL = "/application/ofer";
+    private static final String OFFER_URL = "/application/offer";
 
     @Operation(
             summary = "Прескоринг + запрос на расчёт возможных условий кредита."
