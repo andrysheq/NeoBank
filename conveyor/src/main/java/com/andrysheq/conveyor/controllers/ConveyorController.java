@@ -25,8 +25,8 @@ import java.util.List;
 @RequiredArgsConstructor(onConstructor_ = @__(@Autowired))
 @RequestMapping("")
 @Tag(
-        name = "Контроллер для работы с авторами",
-        description = "Все методы для работы с авторами"
+        name = "Контроллер для работы с conveyor-api",
+        description = "Все методы для работы с conveyor-api"
 )
 public class ConveyorController {
 
@@ -92,7 +92,7 @@ public class ConveyorController {
     }
 
     @Operation(
-            summary = "Валидация и скоринг данных, полный расчет параметров кредита"
+            summary = "Валидация, скоринг данных и полный расчет параметров кредита"
     )
     @ApiResponses(value = {
             @ApiResponse(

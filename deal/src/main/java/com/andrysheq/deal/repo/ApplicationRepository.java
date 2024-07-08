@@ -1,7 +1,7 @@
 package com.andrysheq.deal.repo;
 
 import com.andrysheq.deal.entity.Application;
-import com.andrysheq.conveyor.enums.Status;
+import com.andrysheq.deal.enums.Status;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

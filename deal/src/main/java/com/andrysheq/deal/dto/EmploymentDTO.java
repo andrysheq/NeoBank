@@ -1,7 +1,7 @@
-package com.andrysheq.conveyor.dto;
+package com.andrysheq.deal.dto;
 
-import com.andrysheq.conveyor.enums.EmploymentStatus;
-import com.andrysheq.conveyor.enums.Position;
+import com.andrysheq.deal.enums.EmploymentStatus;
+import com.andrysheq.deal.enums.Position;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;

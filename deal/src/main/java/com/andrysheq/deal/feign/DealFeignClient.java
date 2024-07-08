@@ -1,9 +1,9 @@
 package com.andrysheq.deal.feign;
 
-import com.andrysheq.conveyor.dto.CreditDTO;
-import com.andrysheq.conveyor.dto.LoanApplicationRequestDTO;
-import com.andrysheq.conveyor.dto.LoanOfferDTO;
-import com.andrysheq.conveyor.dto.ScoringDataDTO;
+import com.andrysheq.deal.dto.CreditDTO;
+import com.andrysheq.deal.dto.LoanApplicationRequestDTO;
+import com.andrysheq.deal.dto.LoanOfferDTO;
+import com.andrysheq.deal.dto.ScoringDataDTO;
 import io.swagger.v3.oas.annotations.Parameter;
 import jakarta.validation.Valid;
 import org.springframework.cloud.openfeign.FeignClient;

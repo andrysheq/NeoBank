@@ -1,12 +1,9 @@
 package com.andrysheq.deal.repo.service.impl;
 
-import com.andrysheq.conveyor.exception.RecordNotFoundException;
+import com.andrysheq.deal.exception.RecordNotFoundException;
 import com.andrysheq.deal.entity.Application;
-import com.andrysheq.deal.entity.Client;
 import com.andrysheq.deal.repo.ApplicationRepository;
-import com.andrysheq.deal.repo.ClientRepository;
 import com.andrysheq.deal.repo.service.ApplicationRepoService;
-import com.andrysheq.deal.repo.service.ClientRepoService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;

@@ -1,9 +1,8 @@
 package com.andrysheq.deal.controller;
 
-import com.andrysheq.conveyor.dto.*;
-import com.andrysheq.conveyor.dto.error.ErrorResponse;
-import com.andrysheq.conveyor.enums.CreditStatus;
-import com.andrysheq.conveyor.enums.Status;
+import com.andrysheq.deal.dto.*;
+import com.andrysheq.deal.dto.error.ErrorResponse;
+import com.andrysheq.deal.enums.*;
 import com.andrysheq.deal.entity.Application;
 import com.andrysheq.deal.entity.Client;
 import com.andrysheq.deal.entity.Credit;
@@ -31,8 +30,8 @@ import java.util.List;
 @RequiredArgsConstructor(onConstructor_ = @__(@Autowired))
 @RequestMapping()
 @Tag(
-        name = "Контроллер для работы с авторами",
-        description = "Все методы для работы с авторами"
+        name = "Контроллер для работы с deal-api",
+        description = "Все методы для работы с deal-api"
 )
 public class DealController {
 
@@ -108,7 +107,7 @@ public class DealController {
     }
 
     @Operation(
-            summary = "Расчёт возможных условий кредита."
+            summary = "Выбор одного из предложений."
     )
     @ApiResponses(value = {
             @ApiResponse(
@@ -170,7 +169,7 @@ public class DealController {
     }
 
     @Operation(
-            summary = "Расчёт возможных условий кредита."
+            summary = "Завершение регистрации + полный подсчёт кредита."
     )
     @ApiResponses(value = {
             @ApiResponse(

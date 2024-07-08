@@ -1,10 +1,9 @@
-package com.andrysheq.conveyor.dto;
+package com.andrysheq.deal.dto;
 
-import com.andrysheq.conveyor.enums.ChangeType;
-import com.andrysheq.conveyor.enums.Status;
+import com.andrysheq.deal.enums.ChangeType;
+import com.andrysheq.deal.enums.Status;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Embeddable;
-import jakarta.persistence.Embedded;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 

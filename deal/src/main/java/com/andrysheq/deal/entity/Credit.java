@@ -1,7 +1,7 @@
 package com.andrysheq.deal.entity;
 
-import com.andrysheq.conveyor.dto.PaymentScheduleElement;
-import com.andrysheq.conveyor.enums.CreditStatus;
+import com.andrysheq.deal.dto.PaymentScheduleElement;
+import com.andrysheq.deal.enums.CreditStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

@@ -1,12 +1,11 @@
-package com.andrysheq.conveyor.dto;
+package com.andrysheq.deal.dto;
 
-import com.andrysheq.conveyor.enums.Gender;
-import com.andrysheq.conveyor.enums.MaritalStatus;
+import com.andrysheq.deal.enums.Gender;
+import com.andrysheq.deal.enums.MaritalStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 @Getter
 @Setter
