@@ -23,7 +23,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor(onConstructor_ = @__(@Autowired))
-@RequestMapping("/conveyor")
+@RequestMapping("")
 @Tag(
         name = "Контроллер для работы с авторами",
         description = "Все методы для работы с авторами"
@@ -31,8 +31,8 @@ import java.util.List;
 public class ConveyorController {
 
     private final ScoringService scoringService;
-    private static final String OFFERS_URL = "/offers";
-    private static final String CALCULATION_URL = "/calculation";
+    private static final String OFFERS_URL = "/conveyor/offers";
+    private static final String CALCULATION_URL = "/conveyor/calculation";
 
     @Operation(
             summary = "Расчёт возможных условий кредита"

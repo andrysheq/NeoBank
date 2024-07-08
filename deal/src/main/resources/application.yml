@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: deal
+  datasource:
+    url: jdbc:postgresql://localhost:5432/deal
+    username: postgres
+    password: postgres
+  jpa:
+    hibernate:
+      ddl-auto: update
+server:
+  port: 8002
+springdoc:
+  show-actuator: false
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+
+#spring.flyway.enabled=true
+#spring.flyway.clean-disabled=false

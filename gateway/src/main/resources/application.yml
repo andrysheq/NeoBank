@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: gateway
+server:
+  port: 8000
+
+zuul:
+  routes:
+    order:
+      path: api/conveyor/**
+      url: http://localhost:8001/
+    deal:
+      path: api/deal/**
+      url: http://localhost:8002/
+    application:
+      path: api/application/**
+      url: http://localhost:8003/

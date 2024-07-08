@@ -4,10 +4,16 @@ import com.andrysheq.conveyor.enums.Gender;
 import com.andrysheq.conveyor.enums.MaritalStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-
+@Getter
+@Setter
+@EqualsAndHashCode
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class FinishRegistrationRequestDTO {
 
     @Schema(description = "Фамилия клиента")
@@ -16,7 +22,7 @@ public class FinishRegistrationRequestDTO {
 
     @Schema(description = "Семейное положение")
     @NotNull
-    private String maritalStatus;
+    private MaritalStatus maritalStatus;
 
     @Schema(description = "")
     @NotNull
