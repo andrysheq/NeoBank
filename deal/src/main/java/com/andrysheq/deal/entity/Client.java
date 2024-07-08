@@ -1,14 +1,11 @@
 package com.andrysheq.deal.entity;
 
-import com.andrysheq.conveyor.dto.EmploymentDTO;
-import com.andrysheq.conveyor.enums.Gender;
-import com.andrysheq.conveyor.enums.MaritalStatus;
-import io.swagger.v3.oas.annotations.media.Schema;
+import com.andrysheq.deal.dto.EmploymentDTO;
+import com.andrysheq.deal.enums.Gender;
+import com.andrysheq.deal.enums.MaritalStatus;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.DynamicUpdate;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

@@ -1,11 +1,13 @@
 package com.andrysheq.deal.entity;
 
-import com.andrysheq.conveyor.dto.ApplicationStatusHistoryDTO;
-import com.andrysheq.conveyor.dto.LoanOfferDTO;
-import com.andrysheq.conveyor.enums.Status;
+import com.andrysheq.deal.dto.ApplicationStatusHistoryDTO;
+import com.andrysheq.deal.dto.LoanOfferDTO;
+import com.andrysheq.deal.enums.Status;
 import jakarta.persistence.*;
-import lombok.*;
-import org.hibernate.annotations.CollectionType;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 import java.util.List;

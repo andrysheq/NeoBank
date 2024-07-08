@@ -1,4 +1,4 @@
-package com.andrysheq.conveyor.dto;
+package com.andrysheq.deal.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Embeddable;
