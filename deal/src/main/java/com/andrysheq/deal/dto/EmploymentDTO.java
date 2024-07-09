@@ -35,10 +35,10 @@ public class EmploymentDTO {
 
     @Schema(description = "Общий стаж работы")
     @NotNull
-    private Integer WorkExperienceTotal;
+    private Integer workExperienceTotal;
 
     @Schema(description = "Текущий стаж работы")
     @NotNull
-    private Integer WorkExperienceCurrent;
+    private Integer workExperienceCurrent;
 
 }

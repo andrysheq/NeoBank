@@ -84,7 +84,7 @@ public class ConveyorController {
             produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE
     )
-    public List<LoanOfferDTO> preScoring(
+    public List<LoanOfferDTO> getOffers(
             @Parameter(description = "Loan Application Request DTO", required = true) @Valid @RequestBody LoanApplicationRequestDTO request,
             @Parameter(description = "Application ID", required = true) @RequestParam Long applicationId){
 
@@ -141,7 +141,7 @@ public class ConveyorController {
             produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE
     )
-    public CreditDTO scoring(
+    public CreditDTO calculateCredit(
             @Parameter(name = "ScoringDataDTO", required = true) @Valid @RequestBody ScoringDataDTO request) {
 
         return scoringService.scoring(request);

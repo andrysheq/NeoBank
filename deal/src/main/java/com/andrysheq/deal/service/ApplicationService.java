@@ -1,6 +1,6 @@
 package com.andrysheq.deal.service;
 
-import com.andrysheq.conveyor.dto.LoanApplicationRequestDTO;
+import com.andrysheq.deal.dto.LoanApplicationRequestDTO;
 import com.andrysheq.deal.entity.Client;
 
 public class ApplicationService {

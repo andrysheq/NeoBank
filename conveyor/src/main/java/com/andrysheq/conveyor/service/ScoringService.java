@@ -18,7 +18,7 @@ import java.util.List;
 public interface ScoringService {
     CreditDTO scoring(ScoringDataDTO request);
     public BigDecimal calculateMonthlyPayment(BigDecimal loanAmount, BigDecimal annualInterestRate, int termInMonths);
-    public BigDecimal getPsk(List<PaymentScheduleElement> dates, BigDecimal loanAmount, BigDecimal rate);
+    public BigDecimal getPsk(List<PaymentScheduleElement> dates, BigDecimal insurancePrice, BigDecimal loanAmount, Integer term);
     public List<PaymentScheduleElement> generatePaymentSchedule(BigDecimal loanAmount, int termInMonths, BigDecimal annualInterestRate, BigDecimal annuityPayment);
     public BigDecimal calculateRate(ScoringDataDTO request);
     public void checkLoanEligibility(ScoringDataDTO request);
