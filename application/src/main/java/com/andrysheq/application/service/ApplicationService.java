@@ -42,7 +42,7 @@ public class ApplicationService {
     }
 
     private void assertLoanAmount(BigDecimal amount) {
-        if(!(amount != null && amount.compareTo(new BigDecimal("10000")) < 0)){
+        if(!(amount != null && amount.compareTo(new BigDecimal("10000")) >= 0)){
             throw new PreScoringException("Сумма кредита должна быть больше 10000");
         }
     }

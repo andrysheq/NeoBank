@@ -21,7 +21,7 @@ public interface DealFeignClient {
             produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE
     )
-    List<LoanOfferDTO> preScoring(
+    List<LoanOfferDTO> getOffers(
             @Parameter(description = "Loan Application Request DTO", required = true) @Valid @RequestBody LoanApplicationRequestDTO request,
             @Parameter(description = "Application ID", required = true) @RequestParam Long applicationId);
 

@@ -11,6 +11,7 @@ import com.andrysheq.deal.repo.service.ApplicationRepoService;
 import com.andrysheq.deal.repo.service.ClientRepoService;
 import com.andrysheq.deal.repo.service.CreditRepoService;
 import com.andrysheq.deal.service.ClientService;
+import com.andrysheq.deal.service.EmailService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -24,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
 import java.util.List;
 
 @RestController
@@ -37,12 +39,17 @@ public class DealController {
 
     private final ClientService clientService;
     private final DealFeignClient dealFeignClient;
+    private final EmailService emailService;
     private final ApplicationRepoService applicationRepoService;
     private final CreditRepoService creditRepoService;
     private final ClientRepoService clientRepoService;
     private static final String APPLICATION_URL = "/deal/application";
     private static final String OFFER_URL = "/deal/offer";
     private static final String CALCULATE_URL = "/deal/calculate";
+
+    private static final String SEND_DOCUMENTS_URL = "deal/document/{applicationId}/send";
+    private static final String SIGN_DOCUMENTS_URL = "deal/document/{applicationId}/sign";
+    private static final String CODE_DOCUMENTS_URL = "deal/document/{applicationId}/code";
 
     @Operation(
             summary = "Расчёт возможных условий кредита."
@@ -103,7 +110,7 @@ public class DealController {
         Application application = new Application(client);
         applicationRepoService.save(application);
 
-        return dealFeignClient.preScoring(request, application.getId());
+        return dealFeignClient.getOffers(request, application.getId());
     }
 
     @Operation(
@@ -165,7 +172,7 @@ public class DealController {
         application.setStatus(Status.PREAPPROVAL);
 
 
-        return applicationRepoService.save(application);
+        return applicationRepoService.update(application);
     }
 
     @Operation(
@@ -223,6 +230,7 @@ public class DealController {
             @Parameter(description = "ApplicationID", required = true) @RequestParam Long applicationId) {
 
         Application application = applicationRepoService.findById(applicationId);
+        Client client = application.getClient();
 
         ScoringDataDTO scoringDataDTO = new ScoringDataDTO();
 
@@ -235,8 +243,8 @@ public class DealController {
         scoringDataDTO.setMiddleName(application.getClient().getMiddleName());
         scoringDataDTO.setLastName(application.getClient().getLastName());
         scoringDataDTO.setDependentAmount(request.getDependentAmount());
-        scoringDataDTO.setIsInsuranceEnabled(application.getClient().getIsInsuranceEnabled());
-        scoringDataDTO.setIsSalaryClient(application.getClient().getIsSalaryClient());
+        scoringDataDTO.setIsInsuranceEnabled(application.getAppliedOffer().getIsInsuranceEnabled());
+        scoringDataDTO.setIsSalaryClient(application.getAppliedOffer().getIsSalaryClient());
         scoringDataDTO.setMaritalStatus(request.getMaritalStatus());
         scoringDataDTO.setPassportIssueBranch(request.getPassportIssueBranch());
         scoringDataDTO.setPassportIssueDate(request.getPassportIssueDate());
@@ -261,6 +269,83 @@ public class DealController {
         application.setStatus(Status.CC_APPROVED);
         application.setCredit(credit);
 
+        client.setGender(request.getGender());
+        client.setAccount(request.getAccount());
+        client.setEmployment(request.getEmployment());
+        client.setDependentAmount(request.getDependentAmount());
+        client.setIsSalaryClient(application.getAppliedOffer().getIsSalaryClient());
+        client.setIsInsuranceEnabled(application.getAppliedOffer().getIsInsuranceEnabled());
+        client.setMaritalStatus(request.getMaritalStatus());
+        client.setPassportIssueDate(request.getPassportIssueDate());
+        client.setPassportIssueBranch(request.getPassportIssueBranch());
+
+        clientRepoService.update(client);
+        application.setClient(client);
+
+        signDocuments(application);
+
         return applicationRepoService.update(application);
+    }
+
+    @Operation(
+            summary = "Подписание документов."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Ok",
+                    content = {
+                            @Content(
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    schema = @Schema(implementation = CreditDTO.class))
+                    }),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Bad Request",
+                    content = {
+                            @Content(
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    schema = @Schema(implementation = ErrorResponse.class))
+                    }),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "Unauthorized",
+                    content = {
+                            @Content(
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    schema = @Schema(implementation = ErrorResponse.class))
+                    }),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "Forbidden",
+                    content = {
+                            @Content(
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    schema = @Schema(implementation = ErrorResponse.class))
+                    }),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Not Found",
+                    content = {
+                            @Content(
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    schema = @Schema(implementation = ErrorResponse.class))
+                    })
+    })
+    @PostMapping(
+            path = SIGN_DOCUMENTS_URL,
+            produces = MediaType.APPLICATION_JSON_VALUE,
+            consumes = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseStatus signDocuments(
+            @Parameter(description = "FinishRegistrationRequestDTO", required = true) @RequestBody Application request)
+    {
+        try {
+            emailService.sendEmail(request.getClient().getEmail());
+        } catch (MessagingException e) {
+            throw new RuntimeException("Почта указана неверно");
+        }
+
+        return null;
     }
 }

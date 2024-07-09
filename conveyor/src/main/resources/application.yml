@@ -1,15 +1,23 @@
 server:
   port:
     8001
+  tomcat:
+    native: false
+
 spring:
   application:
     name: conveyor
-  autoconfigure:
-    exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
-logging:
-  level:
-    root: DEBUG
+#  autoconfigure:
+#    exclude: org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+  jmx:
+    enabled: false
+
+#logging:
+#  level:
+#    root: DEBUG
 default-rate: 11
+default-insurance-price: 100000
+
 exception:
   age-not-allowed: The age of the person receiving the loan must be from 20 to 60 years.
   unemployed: The person receiving the loan must be officially employed.

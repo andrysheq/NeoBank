@@ -1,8 +1,8 @@
-package com.andrysheq.deal.entity;
+package com.andrysheq.application.entity;
 
-import com.andrysheq.deal.dto.EmploymentDTO;
-import com.andrysheq.deal.enums.Gender;
-import com.andrysheq.deal.enums.MaritalStatus;
+import com.andrysheq.application.dto.EmploymentDTO;
+import com.andrysheq.application.enums.Gender;
+import com.andrysheq.application.enums.MaritalStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

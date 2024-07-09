@@ -9,6 +9,7 @@
         <module name="conveyor" />
         <module name="dossier" />
         <module name="deal" />
+        <module name="application" />
         <module name="gateway" />
       </profile>
     </annotationProcessing>

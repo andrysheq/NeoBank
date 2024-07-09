@@ -13,8 +13,9 @@ public class ClientService {
         result.setFirstName(request.getFirstName());
         result.setLastName(request.getLastName());
         result.setMiddleName(request.getMiddleName());
-        result.setPassportNumber(result.getPassportNumber());
+        result.setPassportNumber(request.getPassportNumber());
         result.setPassportSeries(request.getPassportSeries());
+        result.setEmail(request.getEmail());
 
         return result;
     }

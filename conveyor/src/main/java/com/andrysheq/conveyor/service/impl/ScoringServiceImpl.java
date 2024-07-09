@@ -20,6 +20,7 @@ import java.time.Period;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -29,17 +30,25 @@ public class ScoringServiceImpl implements ScoringService {
 
     @Value("${default-rate}")
     private BigDecimal defaultRate;
+    @Value("${default-insurance-price}")
+    private BigDecimal insurancePrice;
     public CreditDTO scoring(ScoringDataDTO request){
         checkLoanEligibility(request);
         CreditDTO result = new CreditDTO();
 
         BigDecimal amount = request.getAmount();
+        BigDecimal amountWithoutInsurance = request.getAmount();
         Integer term = request.getTerm();
         Boolean isInsuranceEnabled = request.getIsInsuranceEnabled(), isSalaryClient = request.getIsSalaryClient();
+        BigDecimal currentInsurancePrice = new BigDecimal(0);
+        if(isInsuranceEnabled){
+            currentInsurancePrice = insurancePrice;
+        }
+        amount=amount.add(currentInsurancePrice);
         BigDecimal rate = calculateRate(request);
-        BigDecimal monthlyPayment = calculateMonthlyPayment(amount,rate,term);
-        List<PaymentScheduleElement> paymentSchedule = generatePaymentSchedule(amount, term, rate,monthlyPayment);
-        BigDecimal psk = getPsk(paymentSchedule, amount, rate);
+        BigDecimal monthlyPayment = calculateMonthlyPayment(amountWithoutInsurance,rate,term);
+        List<PaymentScheduleElement> paymentSchedule = generatePaymentSchedule(amountWithoutInsurance, term, rate,monthlyPayment);
+        BigDecimal psk = getPsk(paymentSchedule, currentInsurancePrice, amount, term);
 
         result.setAmount(amount);
         result.setTerm(term);
@@ -66,38 +75,23 @@ public class ScoringServiceImpl implements ScoringService {
         return annuityPayment.setScale(2, RoundingMode.HALF_UP);
     }
 
-    public BigDecimal getPsk(List<PaymentScheduleElement> schedule, BigDecimal loanAmount, BigDecimal annualInterestRate) {
+    public BigDecimal getPsk(List<PaymentScheduleElement> schedule, BigDecimal insurancePrice, BigDecimal loanAmount, Integer term) {
         if (schedule == null || schedule.isEmpty()) {
             return BigDecimal.ZERO;
         }
 
-        int periodsPerYear = 12; // предположим, что периодичность годовая
-        BigDecimal high = new BigDecimal("1.0");
-        BigDecimal low = BigDecimal.ZERO;
-        BigDecimal precision = new BigDecimal("0.000001");
-        BigDecimal periodPerYear = BigDecimal.valueOf(365);
-
-        while (high.subtract(low).compareTo(precision) > 0) {
-            BigDecimal mid = low.add(high).divide(BigDecimal.valueOf(2), 10, RoundingMode.HALF_UP);
-            BigDecimal npv = BigDecimal.ZERO;
-
-            for (PaymentScheduleElement payment : schedule) {
-                long daysBetween = ChronoUnit.DAYS.between(schedule.get(0).getDate(), payment.getDate());
-                BigDecimal days = BigDecimal.valueOf(daysBetween);
-                BigDecimal denominator = BigDecimal.ONE.add(mid).pow(days.divide(periodPerYear, 10, RoundingMode.HALF_UP).intValue(), new MathContext(10, RoundingMode.HALF_UP));
-                npv = npv.add(payment.getTotalPayment().divide(denominator, 10, RoundingMode.HALF_UP));
-            }
-
-            npv = npv.subtract(loanAmount);
-
-            if (npv.compareTo(BigDecimal.ZERO) > 0) {
-                low = mid;
-            } else {
-                high = mid;
-            }
+        BigDecimal allPayments = insurancePrice;
+        for (PaymentScheduleElement o : schedule) {
+            allPayments = allPayments.add(o.getTotalPayment());
         }
 
-        BigDecimal psk = low.multiply(BigDecimal.valueOf(periodsPerYear)).setScale(3, RoundingMode.HALF_UP);
+        BigDecimal interestAmount = loanAmount.subtract(insurancePrice);
+
+        BigDecimal psk = (allPayments.divide(interestAmount, 3, RoundingMode.HALF_UP)
+                .subtract(new BigDecimal(1)))
+                .multiply(new BigDecimal(100))
+                .setScale(3, RoundingMode.HALF_UP);
+
         return psk;
     }
 
@@ -108,9 +102,6 @@ public class ScoringServiceImpl implements ScoringService {
         List<PaymentScheduleElement> paymentSchedule = new ArrayList<>();
 
         BigDecimal monthlyInterestRate = annualInterestRate.divide(BigDecimal.valueOf(12), 10, RoundingMode.HALF_UP).divide(BigDecimal.valueOf(100), 10, RoundingMode.HALF_UP);
-
-        BigDecimal onePlusRateToTerm = BigDecimal.ONE.add(monthlyInterestRate).pow(termInMonths);
-
         BigDecimal remainingDebt = loanAmount;
 
         for (int i = 1; i <= termInMonths; i++) {
@@ -118,6 +109,12 @@ public class ScoringServiceImpl implements ScoringService {
             BigDecimal interestPayment = remainingDebt.multiply(monthlyInterestRate);
             BigDecimal debtPayment = annuityPayment.subtract(interestPayment);
             remainingDebt = remainingDebt.subtract(debtPayment);
+
+            if (i == termInMonths) {
+                annuityPayment = annuityPayment.add(remainingDebt);
+                debtPayment = debtPayment.add(remainingDebt);
+                remainingDebt = BigDecimal.ZERO;
+            }
 
             PaymentScheduleElement element = PaymentScheduleElement.builder()
                     .number(i)
@@ -217,6 +214,7 @@ public class ScoringServiceImpl implements ScoringService {
         LoanOfferDTO isInsuranceIsSalary = getLoanOffer(applicationId, amount, term, true,true);
 
         Collections.addAll(result, notInsuranceIsSalary, notInsuranceNotSalary, isInsuranceIsSalary, isInsuranceNotSalary);
+        result.sort(Comparator.comparing(LoanOfferDTO::getMonthlyPayment));
         return result;
     }
 
@@ -243,7 +241,7 @@ public class ScoringServiceImpl implements ScoringService {
             rate = rate.subtract(new BigDecimal(1));
         }
 
-        BigDecimal monthlyPayment = calculateMonthlyPayment(totalAmount, rate, term);
+        BigDecimal monthlyPayment = calculateMonthlyPayment(amount, rate, term);
 
         result.setRate(rate);
         result.setTotalAmount(totalAmount);

@@ -1,6 +1,6 @@
 package com.andrysheq.application.controllers;
 
-import com.andrysheq.application.Application;
+import com.andrysheq.application.entity.Application;
 import com.andrysheq.application.dto.LoanApplicationRequestDTO;
 import com.andrysheq.application.dto.LoanOfferDTO;
 import com.andrysheq.application.feign.ApplicationFeignClient;

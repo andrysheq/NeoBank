@@ -1,6 +1,6 @@
 package com.andrysheq.application.feign;
 
-import com.andrysheq.application.Application;
+import com.andrysheq.application.entity.Application;
 import com.andrysheq.application.dto.LoanApplicationRequestDTO;
 import com.andrysheq.application.dto.LoanOfferDTO;
 import io.swagger.v3.oas.annotations.Parameter;
