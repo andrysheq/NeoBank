@@ -7,9 +7,11 @@ import com.andrysheq.deal.entity.Application;
 import com.andrysheq.deal.entity.Client;
 import com.andrysheq.deal.entity.Credit;
 import com.andrysheq.deal.feign.DealFeignClient;
+import com.andrysheq.deal.mapper.BaseMapper;
 import com.andrysheq.deal.repo.service.ApplicationRepoService;
 import com.andrysheq.deal.repo.service.ClientRepoService;
 import com.andrysheq.deal.repo.service.CreditRepoService;
+import com.andrysheq.deal.service.ApplicationService;
 import com.andrysheq.deal.service.ClientService;
 import com.andrysheq.deal.service.EmailService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -19,13 +21,16 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.mail.MessagingException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.mail.MessagingException;
+
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -39,15 +44,14 @@ public class DealController {
 
     private final ClientService clientService;
     private final DealFeignClient dealFeignClient;
-    private final EmailService emailService;
+    private final ApplicationService applicationService;
     private final ApplicationRepoService applicationRepoService;
+    private final BaseMapper mapper;
     private final CreditRepoService creditRepoService;
     private final ClientRepoService clientRepoService;
     private static final String APPLICATION_URL = "/deal/application";
     private static final String OFFER_URL = "/deal/offer";
     private static final String CALCULATE_URL = "/deal/calculate";
-
-    private static final String SEND_DOCUMENTS_URL = "deal/document/{applicationId}/send";
     private static final String SIGN_DOCUMENTS_URL = "deal/document/{applicationId}/sign";
     private static final String CODE_DOCUMENTS_URL = "deal/document/{applicationId}/code";
 
@@ -168,9 +172,8 @@ public class DealController {
 
         Application application = applicationRepoService.findById(request.getApplicationId());
 
-        application.setAppliedOffer(request);
+        application.setLoanOffer(request);
         application.setStatus(Status.PREAPPROVAL);
-
 
         return applicationRepoService.update(application);
     }
@@ -243,8 +246,8 @@ public class DealController {
         scoringDataDTO.setMiddleName(application.getClient().getMiddleName());
         scoringDataDTO.setLastName(application.getClient().getLastName());
         scoringDataDTO.setDependentAmount(request.getDependentAmount());
-        scoringDataDTO.setIsInsuranceEnabled(application.getAppliedOffer().getIsInsuranceEnabled());
-        scoringDataDTO.setIsSalaryClient(application.getAppliedOffer().getIsSalaryClient());
+        scoringDataDTO.setIsInsuranceEnabled(application.getLoanOffer().getIsInsuranceEnabled());
+        scoringDataDTO.setIsSalaryClient(application.getLoanOffer().getIsSalaryClient());
         scoringDataDTO.setMaritalStatus(request.getMaritalStatus());
         scoringDataDTO.setPassportIssueBranch(request.getPassportIssueBranch());
         scoringDataDTO.setPassportIssueDate(request.getPassportIssueDate());
@@ -254,16 +257,8 @@ public class DealController {
 
         CreditDTO creditDTO = dealFeignClient.scoring(scoringDataDTO);
 
-        Credit credit = new Credit();
-        credit.setAmount(creditDTO.getAmount());
+        Credit credit = mapper.map(creditDTO, Credit.class);
         credit.setCreditStatus(CreditStatus.CALCULATED);
-        credit.setIsSalaryClient(creditDTO.getIsSalaryClient());
-        credit.setTerm(creditDTO.getTerm());
-        credit.setRate(creditDTO.getRate());
-        credit.setMonthlyPayment(creditDTO.getMonthlyPayment());
-        credit.setIsInsuranceEnabled(creditDTO.getIsInsuranceEnabled());
-        credit.setPaymentSchedule(creditDTO.getPaymentSchedule());
-        credit.setPsk(creditDTO.getPsk());
 
         creditRepoService.save(credit);
         application.setStatus(Status.CC_APPROVED);
@@ -273,8 +268,8 @@ public class DealController {
         client.setAccount(request.getAccount());
         client.setEmployment(request.getEmployment());
         client.setDependentAmount(request.getDependentAmount());
-        client.setIsSalaryClient(application.getAppliedOffer().getIsSalaryClient());
-        client.setIsInsuranceEnabled(application.getAppliedOffer().getIsInsuranceEnabled());
+        client.setIsSalaryClient(application.getLoanOffer().getIsSalaryClient());
+        client.setIsInsuranceEnabled(application.getLoanOffer().getIsInsuranceEnabled());
         client.setMaritalStatus(request.getMaritalStatus());
         client.setPassportIssueDate(request.getPassportIssueDate());
         client.setPassportIssueBranch(request.getPassportIssueBranch());
@@ -282,13 +277,13 @@ public class DealController {
         clientRepoService.update(client);
         application.setClient(client);
 
-        signDocuments(application);
+        signDocuments(application.getId());
 
         return applicationRepoService.update(application);
     }
 
     @Operation(
-            summary = "Подписание документов."
+            summary = "Отправка кода подтверждения на почту клиента."
     )
     @ApiResponses(value = {
             @ApiResponse(
@@ -297,7 +292,7 @@ public class DealController {
                     content = {
                             @Content(
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = CreditDTO.class))
+                                    schema = @Schema(implementation = ResponseEntity.class))
                     }),
             @ApiResponse(
                     responseCode = "400",
@@ -337,15 +332,65 @@ public class DealController {
             produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseStatus signDocuments(
-            @Parameter(description = "FinishRegistrationRequestDTO", required = true) @RequestBody Application request)
+    public ResponseEntity<String> signDocuments(@PathVariable Long applicationId)
     {
-        try {
-            emailService.sendEmail(request.getClient().getEmail());
-        } catch (MessagingException e) {
-            throw new RuntimeException("Почта указана неверно");
-        }
+        return applicationService.signDocuments(applicationId);
+    }
 
-        return null;
+    @Operation(
+            summary = "Подписание документов."
+    )
+    @ApiResponses(value = {
+            @ApiResponse(
+                    responseCode = "200",
+                    description = "Ok",
+                    content = {
+                            @Content(
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    schema = @Schema(implementation = ResponseEntity.class))
+                    }),
+            @ApiResponse(
+                    responseCode = "400",
+                    description = "Bad Request",
+                    content = {
+                            @Content(
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    schema = @Schema(implementation = ErrorResponse.class))
+                    }),
+            @ApiResponse(
+                    responseCode = "401",
+                    description = "Unauthorized",
+                    content = {
+                            @Content(
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    schema = @Schema(implementation = ErrorResponse.class))
+                    }),
+            @ApiResponse(
+                    responseCode = "403",
+                    description = "Forbidden",
+                    content = {
+                            @Content(
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    schema = @Schema(implementation = ErrorResponse.class))
+                    }),
+            @ApiResponse(
+                    responseCode = "404",
+                    description = "Not Found",
+                    content = {
+                            @Content(
+                                    mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                    schema = @Schema(implementation = ErrorResponse.class))
+                    })
+    })
+    @PostMapping(
+            path = CODE_DOCUMENTS_URL,
+            produces = MediaType.APPLICATION_JSON_VALUE,
+            consumes = MediaType.APPLICATION_JSON_VALUE
+    )
+    public Application codeDocuments(
+            @PathVariable Long applicationId,
+            @Parameter(description = "sesCode", required = true) @RequestParam String sesCode)
+    {
+        return applicationService.codeDocuments(applicationId,sesCode);
     }
 }

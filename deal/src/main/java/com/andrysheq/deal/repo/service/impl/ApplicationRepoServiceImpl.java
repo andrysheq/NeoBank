@@ -21,7 +21,7 @@ public class ApplicationRepoServiceImpl implements ApplicationRepoService {
         Optional<Application> clientOpt = applicationRepository.findById(id);
 
         return clientOpt
-                .orElseThrow(() -> new RecordNotFoundException("Клиент не найден. id: " + id));
+                .orElseThrow(() -> new RecordNotFoundException("Заявка не найдена. id: " + id));
     }
 
     @Override

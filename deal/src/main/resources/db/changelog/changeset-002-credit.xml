@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="002-01" author="andrysheq">
+        <createTable tableName="credit">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="true"/>
+            </column>
+            <column name="amount" type="decimal(19, 2)"/>
+            <column name="term" type="int"/>
+            <column name="monthly_payment" type="decimal(19, 2)"/>
+            <column name="rate" type="decimal(19, 2)"/>
+            <column name="psk" type="decimal(19, 2)"/>
+            <column name="is_insurance_enabled" type="boolean"/>
+            <column name="is_salary_client" type="boolean"/>
+            <column name="credit_status" type="varchar(255)"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="002-02" author="andrysheq">
+        <createTable tableName="payment_schedule">
+            <column name="credit_id" type="bigint">
+                <constraints nullable="true"/>
+            </column>
+            <column name="number" type="int">
+                <constraints nullable="true"/>
+            </column>
+            <column name="date" type="date">
+                <constraints nullable="true"/>
+            </column>
+            <column name="total_payment" type="decimal(19, 2)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="interest_payment" type="decimal(19, 2)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="debt_payment" type="decimal(19, 2)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="remaining_debt" type="decimal(19, 2)">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="002-03" author="andrysheq">
+        <addForeignKeyConstraint baseTableName="payment_schedule"
+                                 baseColumnNames="credit_id"
+                                 constraintName="fk_payment_schedule_credit"
+                                 referencedTableName="credit"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+
+</databaseChangeLog>

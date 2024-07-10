@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="001" author="andrysheq">
+        <createTable tableName="client">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="amount" type="decimal(19, 2)"/>
+            <column name="term" type="int"/>
+            <column name="first_name" type="varchar(255)"/>
+            <column name="last_name" type="varchar(255)"/>
+            <column name="middle_name" type="varchar(255)"/>
+            <column name="gender" type="varchar(255)"/>
+            <column name="birth_date" type="date"/>
+            <column name="passport_series" type="varchar(255)"/>
+            <column name="passport_number" type="varchar(255)"/>
+            <column name="passport_issue_date" type="date"/>
+            <column name="passport_issue_branch" type="varchar(255)"/>
+            <column name="marital_status" type="varchar(255)"/>
+            <column name="dependent_amount" type="int"/>
+            <column name="employment_status" type="varchar(255)"/>
+            <column name="employer_inn" type="varchar(255)"/>
+            <column name="salary" type="decimal(19, 2)"/>
+            <column name="position" type="varchar(255)"/>
+            <column name="work_experience_total" type="int"/>
+            <column name="work_experience_current" type="int"/>
+            <column name="account" type="varchar(255)"/>
+            <column name="email" type="varchar(255)"/>
+            <column name="is_insurance_enabled" type="boolean"/>
+            <column name="is_salary_client" type="boolean"/>
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>

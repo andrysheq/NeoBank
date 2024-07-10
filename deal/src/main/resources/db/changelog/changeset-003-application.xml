@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="003-01" author="andrysheq">
+        <createTable tableName="application">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="client_id" type="bigint"/>
+            <column name="credit_id" type="bigint"/>
+            <column name="status" type="varchar(255)"/>
+            <column name="creation_date" type="timestamp"/>
+            <column name="sign_date" type="timestamp"/>
+            <column name="ses_code" type="varchar(255)"/>
+            <column name="total_amount" type="decimal(19,2)"/>
+            <column name="requested_amount" type="decimal(19,2)"/>
+            <column name="term" type="int"/>
+            <column name="monthly_payment" type="decimal(19,2)"/>
+            <column name="rate" type="decimal(19,2)"/>
+            <column name="is_insurance_enabled" type="boolean"/>
+            <column name="is_salary_client" type="boolean"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="003-02" author="andrysheq">
+        <createTable tableName="status_history">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="application_id" type="bigint">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+            <column name="time" type="timestamp">
+                <constraints nullable="true"/>
+            </column>
+            <column name="change_type" type="varchar(255)">
+                <constraints nullable="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="003-03" author="andrysheq">
+        <addForeignKeyConstraint
+                baseTableName="status_history"
+                baseColumnNames="application_id"
+                referencedTableName="application"
+                referencedColumnNames="id"
+                constraintName="fk_status_history_application"
+        />
+    </changeSet>
+
+    <changeSet id="003-04" author="andrysheq">
+        <addForeignKeyConstraint
+                baseTableName="application"
+                baseColumnNames="client_id"
+                constraintName="fk_application_client"
+                referencedTableName="client"
+                referencedColumnNames="id"/>
+    </changeSet>
+
+    <changeSet id="003-05" author="andrysheq">
+        <addForeignKeyConstraint
+                baseTableName="application"
+                baseColumnNames="credit_id"
+                constraintName="fk_application_credit"
+                referencedTableName="credit"
+                referencedColumnNames="id"/>
+    </changeSet>
+
+</databaseChangeLog>

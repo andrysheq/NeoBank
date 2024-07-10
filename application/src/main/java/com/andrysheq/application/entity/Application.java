@@ -21,25 +21,32 @@ import java.util.List;
 public class Application {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "client_id")
+    @OneToOne
+    @JoinColumn(name = "client_id", referencedColumnName = "id")
     private Client client;
 
-    @ManyToOne
-    @JoinColumn(name = "credit_id")
+    @OneToOne
+    @JoinColumn(name = "credit_id", referencedColumnName = "id")
     private Credit credit;
 
+    @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private Status status;
 
+    @Column(name = "creationDate")
     private LocalDateTime creationDate;
+    @Column(name = "signDate")
     private LocalDateTime signDate;
+    @Column(name = "sesCode")
     private String sesCode;
     @Embedded
-    private LoanOfferDTO appliedOffer;
+    private LoanOfferDTO loanOffer;
+
     @ElementCollection
+    @CollectionTable(name = "status_history", joinColumns = {@JoinColumn(name = "application_id", referencedColumnName = "id")})
     private List<ApplicationStatusHistoryDTO> statusHistory;
 
     public Application(Client client) {

@@ -22,7 +22,7 @@ public class CreditRepoServiceImpl implements CreditRepoService {
         Optional<Credit> creditOpt = creditRepository.findById(id);
 
         return creditOpt
-                .orElseThrow(() -> new RecordNotFoundException("Клиент не найден. id: " + id));
+                .orElseThrow(() -> new RecordNotFoundException("Кредит не найден. id: " + id));
     }
 
     @Override

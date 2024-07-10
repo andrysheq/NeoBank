@@ -10,7 +10,6 @@ import java.util.Optional;
 
 @Repository
 public interface ApplicationRepository extends JpaRepository<Application, Long> {
-    List<Application> findByStatus(Status status);
 
     Optional<Application> findById(Long id);
 
