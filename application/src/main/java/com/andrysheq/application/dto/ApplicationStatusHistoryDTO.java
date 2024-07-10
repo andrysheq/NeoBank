@@ -27,7 +27,7 @@ public class ApplicationStatusHistoryDTO {
     @NotNull
     private LocalDateTime time;
 
-    @Schema(description = "")
+    @Schema(description = "Тип изменения")
     @NotNull
     private ChangeType changeType;
 }

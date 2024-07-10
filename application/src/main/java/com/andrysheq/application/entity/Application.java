@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -47,7 +48,7 @@ public class Application {
 
     @ElementCollection
     @CollectionTable(name = "status_history", joinColumns = {@JoinColumn(name = "application_id", referencedColumnName = "id")})
-    private List<ApplicationStatusHistoryDTO> statusHistory;
+    private List<ApplicationStatusHistoryDTO> statusHistory = new ArrayList<>();
 
     public Application(Client client) {
         this.client = client;
@@ -56,6 +57,9 @@ public class Application {
     @PrePersist
     protected void onCreate() {
         creationDate = LocalDateTime.now();
+    }
+    public void addStatusHistory(ApplicationStatusHistoryDTO applicationStatusHistoryDTO){
+        statusHistory.add(applicationStatusHistoryDTO);
     }
 }
 

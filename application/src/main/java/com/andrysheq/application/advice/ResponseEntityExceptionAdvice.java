@@ -51,7 +51,12 @@ public class ResponseEntityExceptionAdvice extends ResponseEntityExceptionHandle
 
     @ExceptionHandler(ScoringException.class)
     public final ResponseEntity<Object> handleScoringException(ScoringException ex, WebRequest request) {
-        return buildErrorResponse(null, "Скоринговая система выдала отказ", createDetails(ex), HttpStatus.NOT_FOUND, ex);
+        return buildErrorResponse(null, "Скоринговая система выдала отказ", createDetails(ex), HttpStatus.BAD_REQUEST, ex);
+    }
+
+    @ExceptionHandler(PreScoringException.class)
+    public final ResponseEntity<Object> handlePreScoringException(PreScoringException ex, WebRequest request) {
+        return buildErrorResponse(null, "Прескоринговая система выдала отказ", createDetails(ex), HttpStatus.BAD_REQUEST, ex);
     }
 
     @ExceptionHandler(UnknownParameterException.class)

@@ -1,5 +1,6 @@
 package com.andrysheq.deal.dto;
 
+import com.andrysheq.deal.entity.Application;
 import com.andrysheq.deal.enums.Gender;
 import com.andrysheq.deal.enums.MaritalStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -85,4 +86,24 @@ public class ScoringDataDTO {
     @Schema(description = "Наличие заработной платы")
     @NotNull
     private Boolean isSalaryClient;
+
+    public ScoringDataDTO(FinishRegistrationRequestDTO request, Application application){
+        account = request.getAccount();
+        amount = application.getClient().getAmount();
+        gender = request.getGender();
+        employment = request.getEmployment();
+        birthDate = application.getClient().getBirthDate();
+        firstName = application.getClient().getFirstName();
+        middleName = application.getClient().getMiddleName();
+        lastName = application.getClient().getLastName();
+        dependentAmount = request.getDependentAmount();
+        isInsuranceEnabled = application.getLoanOffer().getIsInsuranceEnabled();
+        isSalaryClient = application.getLoanOffer().getIsSalaryClient();
+        maritalStatus = request.getMaritalStatus();
+        passportIssueBranch = request.getPassportIssueBranch();
+        passportIssueDate = request.getPassportIssueDate();
+        passportSeries = application.getClient().getPassportSeries();
+        passportNumber = application.getClient().getPassportNumber();
+        term = application.getClient().getTerm();
+    }
 }
