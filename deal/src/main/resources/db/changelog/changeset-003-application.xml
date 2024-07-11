@@ -11,6 +11,7 @@
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="client_id" type="bigint"/>
+            <column name="application_id" type="bigint"/>
             <column name="credit_id" type="bigint"/>
             <column name="status" type="varchar(255)"/>
             <column name="creation_date" type="timestamp"/>

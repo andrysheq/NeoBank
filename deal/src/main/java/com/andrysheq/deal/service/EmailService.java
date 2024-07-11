@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 public class EmailService {
 
     private static final String EMAIL_HOST = "smtp.mail.ru";
-    private static final String EMAIL_USERNAME = "andrey.andreych@bk.ru";
+    private static final String EMAIL_USERNAME = "andrey.andreych@bk.ru"; //почта mail (личная, так как нельзя создать ящик без уникального номера телефона)
 
     public void sendEmail(String to, String code, String signLink) throws MessagingException {
         Properties props = new Properties();
@@ -23,6 +23,7 @@ public class EmailService {
         props.put("mail.smtp.starttls.enable", "true");
         String EMAIL_PASSWORD;
         try {
+            //файл на компьютере с паролем для приложений для почты
             BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream("D:\\javaandreych.txt")));
             EMAIL_PASSWORD = reader.readLine();
         } catch (IOException e) {
