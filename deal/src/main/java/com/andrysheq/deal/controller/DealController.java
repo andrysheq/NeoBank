@@ -172,7 +172,7 @@ public class DealController {
                     content = {
                             @Content(
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = ResponseEntity.class))
+                                    schema = @Schema(implementation = Application.class))
                     }),
             @ApiResponse(
                     responseCode = "400",
@@ -212,13 +212,11 @@ public class DealController {
             produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<String> finishRegAndCalculate(
+    public Application finishRegAndCalculate(
             @Parameter(description = "FinishRegistrationRequestDTO", required = true) @Valid @RequestBody FinishRegistrationRequestDTO request,
             @Parameter(description = "ApplicationID", required = true) @RequestParam Long applicationId) {
 
-        applicationService.finishApplication(request, applicationId);
-
-        return signDocuments(applicationId);
+        return applicationService.finishApplication(request, applicationId);
     }
 
     @Operation(
