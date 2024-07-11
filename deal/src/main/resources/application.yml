@@ -7,7 +7,7 @@ spring:
     password: postgres
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
   liquibase:
     change-log: classpath:/db/changelog/changelog-master.xml
     enabled: true
