@@ -17,10 +17,12 @@ spring:
 server:
   port: 8002
 springdoc:
-  show-actuator: false
+  api-docs:
+    path: /v3/api-docs
   swagger-ui:
-    enabled: true
     path: /swagger-ui.html
+    operationsSorter: method
+    displayRequestDuration: true
 
 #spring.flyway.enabled=true
 #spring.flyway.clean-disabled=false
