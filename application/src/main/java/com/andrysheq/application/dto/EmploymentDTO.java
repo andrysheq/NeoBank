@@ -3,6 +3,8 @@ package com.andrysheq.application.dto;
 import com.andrysheq.application.enums.EmploymentStatus;
 import com.andrysheq.application.enums.Position;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
@@ -17,28 +19,30 @@ import java.math.BigDecimal;
 @Schema(description = "Трудовая книга")
 public class EmploymentDTO {
 
-    @Schema(description = "Трудовой статус")
+    @Schema(description = "Трудовой статус", example = "UNEMPLOYED")
+    @Enumerated(EnumType.STRING)
     @NotNull
     private EmploymentStatus employmentStatus;
 
-    @Schema(description = "ИНН")
+    @Schema(description = "ИНН", example = "123456789123")
     @NotNull
     private String employerInn;
 
-    @Schema(description = "Заработная плата")
+    @Schema(description = "Заработная плата", example = "12345.00")
     @NotNull
     private BigDecimal salary;
 
-    @Schema(description = "Должность")
+    @Schema(description = "Должность", example = "TOP_MANAGER")
+    @Enumerated(EnumType.STRING)
     @NotNull
     private Position position;
 
-    @Schema(description = "Общий стаж работы")
+    @Schema(description = "Общий стаж работы", example = "24")
     @NotNull
-    private Integer WorkExperienceTotal;
+    private Integer workExperienceTotal;
 
-    @Schema(description = "Текущий стаж работы")
+    @Schema(description = "Текущий стаж работы", example = "12")
     @NotNull
-    private Integer WorkExperienceCurrent;
+    private Integer workExperienceCurrent;
 
 }

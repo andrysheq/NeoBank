@@ -14,11 +14,11 @@ import lombok.*;
 @Schema(description = "Письмо на электронную почту")
 public class EmailMessage {
 
-    @Schema(description = "Адрес почты")
+    @Schema(description = "Адрес почты", example = "andrey.andreych@mail.ru")
     @NotNull
     private String address;
 
-    @Schema(description = "Тема письма")
+    @Schema(description = "Тема письма", example = "SEND_SES")
     @NotNull
     private EmailTheme theme;
 

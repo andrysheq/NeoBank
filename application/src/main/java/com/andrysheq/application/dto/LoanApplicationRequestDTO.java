@@ -16,39 +16,39 @@ import java.time.LocalDate;
 @Schema(description = "Запрос для получения кредита")
 public class LoanApplicationRequestDTO {
 
-    @Schema(description = "Сумма кредита")
+    @Schema(description = "Сумма кредита", example = "1000000.00")
     @NotNull
     private BigDecimal amount;
 
-    @Schema(description = "Срок кредитования")
+    @Schema(description = "Срок кредитования", example = "12")
     @NotNull
     private Integer term;
 
-    @Schema(description = "Имя клиента")
+    @Schema(description = "Имя клиента", example = "Andrey")
     @NotNull
     private String firstName;
 
-    @Schema(description = "Фамилия клиента")
+    @Schema(description = "Фамилия клиента", example = "Andreev")
     @NotNull
     private String lastName;
 
-    @Schema(description = "Отчество клиента")
+    @Schema(description = "Отчество клиента", example = "Andreevich")
     @NotNull
     private String middleName;
 
-    @Schema(description = "Адрес электронной почты")
+    @Schema(description = "Адрес электронной почты", example = "andrey_neobank@mail.ru")
     @NotNull
     private String email;
 
-    @Schema(description = "Дата рождения клиента")
+    @Schema(description = "Дата рождения клиента", example = "2002-07-01")
     @NotNull
     private LocalDate birthDate;
 
-    @Schema(description = "Серия паспорта")
+    @Schema(description = "Серия паспорта", example = "1324")
     @NotNull
     private String passportSeries;
 
-    @Schema(description = "Номер паспорта")
+    @Schema(description = "Номер паспорта", example = "465768")
     @NotNull
     private String passportNumber;
 
