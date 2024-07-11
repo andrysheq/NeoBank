@@ -16,34 +16,34 @@ import java.math.BigDecimal;
 @Schema(description = "Запрос для скоринга")
 public class LoanOfferDTO {
 
-    @Schema(description = "Идентификатор заявки")
+    @Schema(description = "Идентификатор заявки", example = "1")
     private Long applicationId;
 
-    @Schema(description = "Общая сумма")
+    @Schema(description = "Общая сумма", example = "1000000.00")
     @NotNull
     private BigDecimal totalAmount;
 
-    @Schema(description = "Запрашиваемая сумма")
+    @Schema(description = "Запрашиваемая сумма", example = "1000000.00")
     @NotNull
     private BigDecimal requestedAmount;
 
-    @Schema(description = "Срок кредитования")
+    @Schema(description = "Срок кредитования", example = "12")
     @NotNull
     private Integer term;
 
-    @Schema(description = "Ежемесячный платеж")
+    @Schema(description = "Ежемесячный платеж", example = "10000.00")
     @NotNull
     private BigDecimal monthlyPayment;
 
-    @Schema(description = "Процентная ставка")
+    @Schema(description = "Процентная ставка", example = "11.00")
     @NotNull
     private BigDecimal rate;
 
-    @Schema(description = "Наличие страхования")
+    @Schema(description = "Наличие страхования", example = "true")
     @NotNull
     private Boolean isInsuranceEnabled;
 
-    @Schema(description = "Наличие заработной платы у клиента")
+    @Schema(description = "Наличие заработной платы у клиента", example = "true")
     @NotNull
     private Boolean isSalaryClient;
 }

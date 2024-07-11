@@ -3,8 +3,8 @@ package com.andrysheq.conveyor.enums;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 public enum ChangeType {
-    @Schema(description = "Рассчитан")
+    @Schema(description = "Одобрено")
     APPROVED,
-    @Schema(description = "Выдан")
+    @Schema(description = "Отказано")
     DENIED
 }
