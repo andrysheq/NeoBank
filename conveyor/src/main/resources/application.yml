@@ -23,3 +23,11 @@ exception:
   unemployed: The person receiving the loan must be officially employed.
   excessive-amount: The loan amount should not exceed 20 salaries.
   insufficient-work-experience: The total work experience must be at least 12 months, and the current one must be at least 3 months.
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operationsSorter: method
+    displayRequestDuration: true
