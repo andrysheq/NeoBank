@@ -2,9 +2,8 @@ package com.andrysheq.deal.controller;
 
 import com.andrysheq.deal.dto.*;
 import com.andrysheq.deal.dto.error.ErrorResponse;
-import com.andrysheq.deal.enums.*;
-import com.andrysheq.deal.entity.Application;
-import com.andrysheq.deal.entity.Client;
+import com.andrysheq.deal.entity.ApplicationEntity;
+import com.andrysheq.deal.entity.ClientEntity;
 import com.andrysheq.deal.feign.DealFeignClient;
 import com.andrysheq.deal.repo.service.ApplicationRepoService;
 import com.andrysheq.deal.service.ApplicationService;
@@ -100,8 +99,8 @@ public class DealController {
     public List<LoanOfferDTO> application(
             @Parameter(name = "LoanApplicationRequestDTO", required = true) @Valid @RequestBody LoanApplicationRequestDTO request) {
 
-        Client client = clientService.initClient(request);
-        Application application = applicationService.initApplication(client);
+        ClientEntity client = clientService.initClient(request);
+        ApplicationEntity application = applicationService.initApplication(client);
 
         return dealFeignClient.getOffers(request, application.getId());
     }
@@ -116,7 +115,7 @@ public class DealController {
                     content = {
                             @Content(
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = Application.class))
+                                    schema = @Schema(implementation = ApplicationEntity.class))
                     }),
             @ApiResponse(
                     responseCode = "400",
@@ -156,7 +155,7 @@ public class DealController {
             produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE
     )
-    public Application offer(
+    public ApplicationEntity offer(
             @Parameter(name = "LoanOfferDTO", required = true) @Valid @RequestBody LoanOfferDTO request) {
 
         return applicationService.doOffer(request);
@@ -172,7 +171,7 @@ public class DealController {
                     content = {
                             @Content(
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = Application.class))
+                                    schema = @Schema(implementation = ApplicationEntity.class))
                     }),
             @ApiResponse(
                     responseCode = "400",
@@ -212,7 +211,7 @@ public class DealController {
             produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE
     )
-    public Application finishRegAndCalculate(
+    public ApplicationEntity finishRegAndCalculate(
             @Parameter(description = "FinishRegistrationRequestDTO", required = true) @Valid @RequestBody FinishRegistrationRequestDTO request,
             @Parameter(description = "ApplicationID", required = true) @RequestParam Long applicationId) {
 
@@ -324,7 +323,7 @@ public class DealController {
             produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE
     )
-    public Application codeDocuments(
+    public ApplicationEntity codeDocuments(
             @PathVariable Long applicationId,
             @Parameter(description = "sesCode", required = true) @RequestParam String sesCode)
     {

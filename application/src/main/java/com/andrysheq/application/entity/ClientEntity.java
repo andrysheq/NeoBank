@@ -1,11 +1,12 @@
-package com.andrysheq.deal.entity;
+package com.andrysheq.application.entity;
 
-import com.andrysheq.deal.dto.EmploymentDTO;
-import com.andrysheq.deal.enums.Gender;
-import com.andrysheq.deal.enums.MaritalStatus;
+import com.andrysheq.application.dto.EmploymentDTO;
+import com.andrysheq.application.enums.Gender;
+import com.andrysheq.application.enums.MaritalStatus;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -14,7 +15,11 @@ import java.time.LocalDate;
 @Table(name = "client")
 @Getter
 @Setter
-public class Client {
+@EqualsAndHashCode
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class ClientEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -75,5 +80,10 @@ public class Client {
 
     @Column(name = "is_salary_client")
     private Boolean isSalaryClient;
+
+    @ManyToOne(optional = false)
+    @Fetch(FetchMode.JOIN)
+    @JoinColumn(name = "application_id", referencedColumnName = "id", nullable = false)
+    private ApplicationEntity application;
 
 }

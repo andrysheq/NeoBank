@@ -1,12 +1,12 @@
 package com.andrysheq.deal.repo.service;
 
-import com.andrysheq.deal.entity.Credit;
+import com.andrysheq.deal.entity.CreditEntity;
 
 public interface CreditRepoService {
-    Credit findById(Long id);
+    CreditEntity findById(Long id);
 
-    Credit save(Credit credit);
+    CreditEntity save(CreditEntity credit);
 
-    Credit update(Credit credit);
+    CreditEntity update(CreditEntity credit);
 }
 

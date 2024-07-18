@@ -1,6 +1,6 @@
 package com.andrysheq.deal.dto;
 
-import com.andrysheq.deal.entity.Application;
+import com.andrysheq.deal.entity.ApplicationEntity;
 import com.andrysheq.deal.enums.Gender;
 import com.andrysheq.deal.enums.MaritalStatus;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -89,7 +89,7 @@ public class ScoringDataDTO {
     @NotNull
     private Boolean isSalaryClient;
 
-    public ScoringDataDTO(FinishRegistrationRequestDTO request, Application application){
+    public ScoringDataDTO(FinishRegistrationRequestDTO request, ApplicationEntity application){
         account = request.getAccount();
         amount = application.getClient().getAmount();
         gender = request.getGender();

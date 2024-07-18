@@ -1,8 +1,8 @@
-package com.andrysheq.application.entity;
+package com.andrysheq.deal.entity;
 
-import com.andrysheq.application.dto.EmploymentDTO;
-import com.andrysheq.application.enums.Gender;
-import com.andrysheq.application.enums.MaritalStatus;
+import com.andrysheq.deal.dto.EmploymentDTO;
+import com.andrysheq.deal.enums.Gender;
+import com.andrysheq.deal.enums.MaritalStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,7 +14,7 @@ import java.time.LocalDate;
 @Table(name = "client")
 @Getter
 @Setter
-public class Client {
+public class ClientEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

@@ -1,9 +1,7 @@
 package com.andrysheq.deal.config;
 
-import com.andrysheq.deal.dto.ApplicationStatusHistoryDTO;
 import com.andrysheq.deal.dto.CreditDTO;
-import com.andrysheq.deal.dto.LoanOfferDTO;
-import com.andrysheq.deal.entity.Credit;
+import com.andrysheq.deal.entity.CreditEntity;
 import com.andrysheq.deal.mapper.BaseMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.context.annotation.Bean;
@@ -32,7 +30,7 @@ public class MapperConfiguration {
     }
 
     private void createTypeMaps(BaseMapper mapper) {
-        mapper.createTypeMap(Credit.class, CreditDTO.class)
+        mapper.createTypeMap(CreditEntity.class, CreditDTO.class)
                 .addMappings(expr -> {
                     expr.skip(CreditDTO::setAmount);
                     expr.skip(CreditDTO::setPsk);
@@ -45,7 +43,7 @@ public class MapperConfiguration {
                 })
                 .setPostConverter(
                         ctx -> {
-                            final Credit source = ctx.getSource();
+                            final CreditEntity source = ctx.getSource();
                             final CreditDTO destination = ctx.getDestination();
 
                             destination.setPsk(source.getPsk());
@@ -60,21 +58,21 @@ public class MapperConfiguration {
                             return ctx.getDestination();
                         });
 
-        mapper.createTypeMap(CreditDTO.class, Credit.class)
+        mapper.createTypeMap(CreditDTO.class, CreditEntity.class)
                 .addMappings(expr -> {
-                    expr.skip(Credit::setAmount);
-                    expr.skip(Credit::setPsk);
-                    expr.skip(Credit::setRate);
-                    expr.skip(Credit::setTerm);
-                    expr.skip(Credit::setMonthlyPayment);
-                    expr.skip(Credit::setIsInsuranceEnabled);
-                    expr.skip(Credit::setIsSalaryClient);
-                    expr.skip(Credit::setPaymentSchedule);
+                    expr.skip(CreditEntity::setAmount);
+                    expr.skip(CreditEntity::setPsk);
+                    expr.skip(CreditEntity::setRate);
+                    expr.skip(CreditEntity::setTerm);
+                    expr.skip(CreditEntity::setMonthlyPayment);
+                    expr.skip(CreditEntity::setIsInsuranceEnabled);
+                    expr.skip(CreditEntity::setIsSalaryClient);
+                    expr.skip(CreditEntity::setPaymentSchedule);
                 })
                 .setPostConverter(
                         ctx -> {
                             final CreditDTO source = ctx.getSource();
-                            final Credit destination = ctx.getDestination();
+                            final CreditEntity destination = ctx.getDestination();
 
                             destination.setPsk(source.getPsk());
                             destination.setAmount(source.getAmount());

@@ -4,10 +4,7 @@ import com.andrysheq.application.dto.ApplicationStatusHistoryDTO;
 import com.andrysheq.application.dto.LoanOfferDTO;
 import com.andrysheq.application.enums.Status;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -15,11 +12,12 @@ import java.util.List;
 
 @Entity
 @Table(name = "application")
+@Builder
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Application {
+public class ApplicationEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -27,30 +25,34 @@ public class Application {
 
     @OneToOne
     @JoinColumn(name = "client_id", referencedColumnName = "id")
-    private Client client;
+    private ClientEntity client;
 
     @OneToOne
     @JoinColumn(name = "credit_id", referencedColumnName = "id")
-    private Credit credit;
+    private CreditEntity credit;
 
     @Column(name = "status")
     @Enumerated(EnumType.STRING)
     private Status status;
 
-    @Column(name = "creationDate")
+    @Column(name = "creation_date")
     private LocalDateTime creationDate;
-    @Column(name = "signDate")
+
+    @Column(name = "sign_date")
     private LocalDateTime signDate;
-    @Column(name = "sesCode")
+
+    @Column(name = "ses_code")
     private String sesCode;
-    @Embedded
-    private LoanOfferDTO loanOffer;
 
-    @ElementCollection
-    @CollectionTable(name = "status_history", joinColumns = {@JoinColumn(name = "application_id", referencedColumnName = "id")})
-    private List<ApplicationStatusHistoryDTO> statusHistory = new ArrayList<>();
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "loan_offer_id", referencedColumnName = "id")
+    private LoanOfferEntity loanOffer;
 
-    public Application(Client client) {
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "status_history_id", referencedColumnName = "id")
+    private List<ApplicationStatusHistoryEntity> statusHistory = new ArrayList<>();
+
+    public ApplicationEntity(ClientEntity client) {
         this.client = client;
     }
 
@@ -58,8 +60,8 @@ public class Application {
     protected void onCreate() {
         creationDate = LocalDateTime.now();
     }
-    public void addStatusHistory(ApplicationStatusHistoryDTO applicationStatusHistoryDTO){
-        statusHistory.add(applicationStatusHistoryDTO);
+    public void addStatusHistory(ApplicationStatusHistoryEntity applicationStatusHistory){
+        statusHistory.add(applicationStatusHistory);
     }
 }
 

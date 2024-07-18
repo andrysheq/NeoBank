@@ -1,7 +1,7 @@
-package com.andrysheq.application.entity;
+package com.andrysheq.deal.entity;
 
-import com.andrysheq.application.dto.PaymentScheduleElement;
-import com.andrysheq.application.enums.CreditStatus;
+import com.andrysheq.deal.dto.PaymentScheduleElement;
+import com.andrysheq.deal.enums.CreditStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,7 +13,7 @@ import java.util.List;
 @Table(name = "credit")
 @Getter
 @Setter
-public class Credit {
+public class CreditEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

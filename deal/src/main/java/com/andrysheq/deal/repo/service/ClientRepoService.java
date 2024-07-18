@@ -1,12 +1,12 @@
 package com.andrysheq.deal.repo.service;
 
-import com.andrysheq.deal.entity.Client;
+import com.andrysheq.deal.entity.ClientEntity;
 
 public interface ClientRepoService {
-    Client findById(Long id);
+    ClientEntity findById(Long id);
 
-    Client save(Client client);
+    ClientEntity save(ClientEntity client);
 
-    Client update(Client client);
+    ClientEntity update(ClientEntity client);
 }
 

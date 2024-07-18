@@ -4,13 +4,12 @@ import com.andrysheq.deal.dto.ApplicationStatusHistoryDTO;
 import com.andrysheq.deal.dto.FinishRegistrationRequestDTO;
 import com.andrysheq.deal.dto.LoanOfferDTO;
 import com.andrysheq.deal.dto.ScoringDataDTO;
-import com.andrysheq.deal.entity.Application;
-import com.andrysheq.deal.entity.Client;
-import com.andrysheq.deal.entity.Credit;
+import com.andrysheq.deal.entity.*;
 import com.andrysheq.deal.enums.ChangeType;
 import com.andrysheq.deal.enums.CreditStatus;
 import com.andrysheq.deal.enums.Status;
 import com.andrysheq.deal.feign.DealFeignClient;
+import com.andrysheq.deal.mapper.BaseMapper;
 import com.andrysheq.deal.repo.service.ApplicationRepoService;
 import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
@@ -28,22 +27,24 @@ public class ApplicationService {
     private final ClientService clientService;
     private final DealFeignClient dealFeignClient;
     private final CreditService creditService;
+    private final BaseMapper mapper;
 
 
-    public Application initApplication(Client client){
-        Application application = new Application(client);
-        ApplicationStatusHistoryDTO statusHistory = new ApplicationStatusHistoryDTO();
-        statusHistory.setStatus(Status.PREAPPROVAL);
-        statusHistory.setChangeType(ChangeType.APPROVED);
-        statusHistory.setTime(LocalDateTime.now());
+    public ApplicationEntity initApplication(ClientEntity client){
+        ApplicationEntity application = new ApplicationEntity(client);
+        ApplicationStatusHistoryDTO statusHistoryDTO = new ApplicationStatusHistoryDTO();
+        statusHistoryDTO.setStatus(Status.PREAPPROVAL);
+        statusHistoryDTO.setChangeType(ChangeType.APPROVED);
+        statusHistoryDTO.setTime(LocalDateTime.now());
+        ApplicationStatusHistoryEntity statusHistory = mapper.map(statusHistoryDTO, ApplicationStatusHistoryEntity.class);
         application.addStatusHistory(statusHistory);
         return applicationRepoService.save(application);
     }
 
-    public Application finishApplication(FinishRegistrationRequestDTO request, Long applicationId){
-        Application application = applicationRepoService.findById(applicationId);
+    public ApplicationEntity finishApplication(FinishRegistrationRequestDTO request, Long applicationId){
+        ApplicationEntity application = applicationRepoService.findById(applicationId);
 
-        Credit credit = creditService.initCredit(dealFeignClient.scoring(new ScoringDataDTO(request,application)));
+        CreditEntity credit = creditService.initCredit(dealFeignClient.scoring(new ScoringDataDTO(request,application)));
 
         application.setStatus(Status.CC_APPROVED);
         application.setCredit(credit);
@@ -54,21 +55,23 @@ public class ApplicationService {
         statusHistoryDTO.setTime(LocalDateTime.now());
         statusHistoryDTO.setStatus(Status.CC_APPROVED);
         statusHistoryDTO.setChangeType(ChangeType.APPROVED);
-        application.addStatusHistory(statusHistoryDTO);
+
+        ApplicationStatusHistoryEntity statusHistory = mapper.map(statusHistoryDTO, ApplicationStatusHistoryEntity.class);
+        application.addStatusHistory(statusHistory);
 
         return applicationRepoService.update(application);
     }
 
-    public Application doOffer(LoanOfferDTO request){
-        Application application = applicationRepoService.findById(request.getApplicationId());
-
-        application.setLoanOffer(request);
+    public ApplicationEntity doOffer(LoanOfferDTO request){
+        ApplicationEntity application = applicationRepoService.findById(request.getApplicationId());
+        
+        application.setLoanOffer(mapper.map(request, LoanOfferEntity.class));
         application.setStatus(Status.PREAPPROVAL);
 
         return applicationRepoService.update(application);
     }
     public ResponseEntity<String> signDocuments(Long applicationId){
-        Application application = applicationRepoService.findById(applicationId);
+        ApplicationEntity application = applicationRepoService.findById(applicationId);
         if(application.getCredit()!=null) {
             String sesCode = emailService.generateRandomCode();
             try {
@@ -80,7 +83,7 @@ public class ApplicationService {
                 statusHistoryDTO.setTime(LocalDateTime.now());
                 statusHistoryDTO.setStatus(Status.DOCUMENT_CREATED);
                 statusHistoryDTO.setChangeType(ChangeType.APPROVED);
-                application.addStatusHistory(statusHistoryDTO);
+                application.addStatusHistory(mapper.map(statusHistoryDTO, ApplicationStatusHistoryEntity.class));
 
                 applicationRepoService.update(application);
             } catch (MessagingException e) {
@@ -94,15 +97,15 @@ public class ApplicationService {
         return ResponseEntity.ok("Документы отправлены на почту клиента");
     }
 
-    public Application codeDocuments(Long applicationId, String sesCode){
-        Application application = applicationRepoService.findById(applicationId);
+    public ApplicationEntity codeDocuments(Long applicationId, String sesCode){
+        ApplicationEntity application = applicationRepoService.findById(applicationId);
 
         if(application.getSesCode().equals(sesCode)) {
             ApplicationStatusHistoryDTO statusHistoryDTO = new ApplicationStatusHistoryDTO();
             statusHistoryDTO.setTime(LocalDateTime.now());
             statusHistoryDTO.setStatus(Status.DOCUMENT_SIGNED);
             statusHistoryDTO.setChangeType(ChangeType.APPROVED);
-            application.addStatusHistory(statusHistoryDTO);
+            application.addStatusHistory(mapper.map(statusHistoryDTO, ApplicationStatusHistoryEntity.class));
             application.setSignDate(LocalDateTime.now());
 
             application.getCredit().setCreditStatus(CreditStatus.ISSUED);
@@ -112,7 +115,7 @@ public class ApplicationService {
             creditIssuedStatus.setTime(LocalDateTime.now());
             creditIssuedStatus.setStatus(Status.CREDIT_ISSUED);
             creditIssuedStatus.setChangeType(ChangeType.APPROVED);
-            application.addStatusHistory(creditIssuedStatus);
+            application.addStatusHistory(mapper.map(creditIssuedStatus,ApplicationStatusHistoryEntity.class));
 
             applicationRepoService.update(application);
         }else{

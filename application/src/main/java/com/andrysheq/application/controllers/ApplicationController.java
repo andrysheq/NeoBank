@@ -1,6 +1,6 @@
 package com.andrysheq.application.controllers;
 
-import com.andrysheq.application.entity.Application;
+import com.andrysheq.application.entity.ApplicationEntity;
 import com.andrysheq.application.dto.LoanApplicationRequestDTO;
 import com.andrysheq.application.dto.LoanOfferDTO;
 import com.andrysheq.application.feign.ApplicationFeignClient;
@@ -102,7 +102,7 @@ public class ApplicationController {
                     content = {
                             @Content(
                                     mediaType = MediaType.APPLICATION_JSON_VALUE,
-                                    schema = @Schema(implementation = Application.class))
+                                    schema = @Schema(implementation = ApplicationEntity.class))
                     }),
             @ApiResponse(
                     responseCode = "400",
@@ -142,7 +142,7 @@ public class ApplicationController {
             produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE
     )
-    public Application offer(
+    public ApplicationEntity offer(
             @Parameter(name = "LoanApplicationRequestDTO", required = true) @Valid @RequestBody LoanOfferDTO request) {
 
         return applicationFeignClient.offer(request);

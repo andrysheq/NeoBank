@@ -1,11 +1,11 @@
 package com.andrysheq.deal.repo.service;
 
-import com.andrysheq.deal.entity.Application;
+import com.andrysheq.deal.entity.ApplicationEntity;
 
 public interface ApplicationRepoService {
-    Application findById(Long id);
+    ApplicationEntity findById(Long id);
 
-    Application save(Application application);
+    ApplicationEntity save(ApplicationEntity application);
 
-    Application update(Application application);
+    ApplicationEntity update(ApplicationEntity application);
 }

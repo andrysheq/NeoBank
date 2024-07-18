@@ -1,6 +1,6 @@
 package com.andrysheq.deal.repo.service.impl;
 
-import com.andrysheq.deal.entity.Client;
+import com.andrysheq.deal.entity.ClientEntity;
 import com.andrysheq.deal.exception.RecordNotFoundException;
 import com.andrysheq.deal.repo.ClientRepository;
 import com.andrysheq.deal.repo.service.ClientRepoService;
@@ -17,20 +17,20 @@ public class ClientRepoServiceImpl implements ClientRepoService {
     private final ClientRepository clientRepository;
     @Override
     @Transactional(readOnly = true)
-    public Client findById(Long id) {
-        Optional<Client> clientOpt = clientRepository.findById(id);
+    public ClientEntity findById(Long id) {
+        Optional<ClientEntity> clientOpt = clientRepository.findById(id);
 
         return clientOpt
                 .orElseThrow(() -> new RecordNotFoundException("Клиент не найден. id: " + id));
     }
 
     @Override
-    public Client save(Client client) {
+    public ClientEntity save(ClientEntity client) {
         return clientRepository.save(client);
     }
 
     @Override
-    public Client update(Client client) {
+    public ClientEntity update(ClientEntity client) {
         return clientRepository.saveAndFlush(client);
     }
 }

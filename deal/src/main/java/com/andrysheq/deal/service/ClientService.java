@@ -2,8 +2,8 @@ package com.andrysheq.deal.service;
 
 import com.andrysheq.deal.dto.FinishRegistrationRequestDTO;
 import com.andrysheq.deal.dto.LoanApplicationRequestDTO;
-import com.andrysheq.deal.entity.Application;
-import com.andrysheq.deal.entity.Client;
+import com.andrysheq.deal.entity.ApplicationEntity;
+import com.andrysheq.deal.entity.ClientEntity;
 import com.andrysheq.deal.repo.service.ClientRepoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +13,8 @@ import org.springframework.stereotype.Service;
 public class ClientService {
     private final ClientRepoService clientRepoService;
 
-    public Client getClient(LoanApplicationRequestDTO request){
-        Client result = new Client();
+    public ClientEntity getClient(LoanApplicationRequestDTO request){
+        ClientEntity result = new ClientEntity();
         result.setAmount(request.getAmount());
         result.setTerm(request.getTerm());
         result.setBirthDate(request.getBirthDate());
@@ -28,8 +28,8 @@ public class ClientService {
         return result;
     }
 
-    public Client finishRegistration(FinishRegistrationRequestDTO request, Application application){
-        Client client = application.getClient();
+    public ClientEntity finishRegistration(FinishRegistrationRequestDTO request, ApplicationEntity application){
+        ClientEntity client = application.getClient();
         client.setGender(request.getGender());
         client.setAccount(request.getAccount());
         client.setEmployment(request.getEmployment());
@@ -43,8 +43,8 @@ public class ClientService {
         return clientRepoService.update(client);
     }
 
-    public Client initClient(LoanApplicationRequestDTO request) {
-        Client client = getClient(request);
+    public ClientEntity initClient(LoanApplicationRequestDTO request) {
+        ClientEntity client = getClient(request);
         return clientRepoService.save(client);
     }
 }

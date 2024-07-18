@@ -1,7 +1,7 @@
 package com.andrysheq.deal.mapper;
 
 import com.andrysheq.deal.dto.CreditDTO;
-import com.andrysheq.deal.entity.Credit;
+import com.andrysheq.deal.entity.CreditEntity;
 import org.modelmapper.ModelMapper;
 
 import java.util.*;
@@ -35,7 +35,7 @@ public class BaseMapper extends ModelMapper {
         return result;
     }
 
-    public CreditDTO toDto(Credit creditEntity) {
+    public CreditDTO toDto(CreditEntity creditEntity) {
         return map(creditEntity, CreditDTO.class);
     }
 

@@ -1,7 +1,7 @@
 package com.andrysheq.deal.service;
 
 import com.andrysheq.deal.dto.CreditDTO;
-import com.andrysheq.deal.entity.Credit;
+import com.andrysheq.deal.entity.CreditEntity;
 import com.andrysheq.deal.enums.CreditStatus;
 import com.andrysheq.deal.mapper.BaseMapper;
 import com.andrysheq.deal.repo.service.CreditRepoService;
@@ -15,8 +15,8 @@ public class CreditService {
     private final CreditRepoService creditRepoService;
     private final BaseMapper mapper;
 
-    public Credit initCredit(CreditDTO creditDTO){
-        Credit credit = mapper.map(creditDTO, Credit.class);
+    public CreditEntity initCredit(CreditDTO creditDTO){
+        CreditEntity credit = mapper.map(creditDTO, CreditEntity.class);
         credit.setCreditStatus(CreditStatus.CALCULATED);
 
         return creditRepoService.save(credit);
